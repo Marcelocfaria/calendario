@@ -1422,27 +1422,61 @@ async function testSheets() {
   } catch(e) { toast('❌ ' + e.message); }
 }
 
-async function syncToSheets(ev) {
-  if (!S.sheets.script) return;
+async function testSheets() {
+  const url = document.getElementById('shUrl').value.trim();
+  if (!url) { toast('Informe a URL CSV!'); return; }
+  toast('🔄 Testando...');
   try {
-    // O 'no-cors' faz com que o navegador não consiga ler a resposta (r.ok será false)
-    // mas o dado CHEGA no Google Sheets. 
-    await fetch(S.sheets.script, {
+    const r = await fetch(url);
+    if (r.ok) {
+      const text = await r.text(); // 1. Lemos como texto (CSV), não JSON
+      const rows = text.trim().split('\n'); // 2. Contamos as linhas do CSV
+      
+      toast(`✅ Conectado! ${rows.length - 1} registros na planilha.`);
+      
+      S.sheets.connected = true; 
+      S.sheets.lastSync = new Date().toISOString();
+      S.sheets.url = url; 
+      
+      save(); 
+      updateSheetsStatus();
+      iniciarAutoSync(); 
+    } else {
+      toast('❌ Erro ao conectar. Verifique a URL.');
+    }
+  } catch(e) { 
+    toast('❌ Erro: Verifique se a URL é um CSV válido.');
+    console.error(e);
+  }
+}
+
+async function syncToSheets(ev) {
+  // Pegamos a URL do campo específico do Apps Script (shScript)
+  const scriptUrl = document.getElementById('shScript').value.trim();
+  if (!scriptUrl) return;
+  
+  try {
+    // Adicionamos a ação de "create" para o Apps Script entender
+    const payload = { ...ev, action: 'create' };
+
+    await fetch(scriptUrl, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(ev)
+      body: JSON.stringify(payload)
     });
 
-    // Como o 'no-cors' impede de esperar a confirmação real, 
-    // aguardamos um pequeno delay e forçamos a atualização da interface.
+    S.sheets.lastSync = new Date().toISOString();
+    save();
+    
+    // Pequeno delay para o Google processar antes de atualizarmos a interface
     setTimeout(() => {
-      testSheets(); // Reutilizamos o testSheets (que é um GET) para baixar os dados novos
-      toast('☁️ Sincronizado!');
-    }, 500); 
+      testSheets(); 
+      toast('☁️ Sincronizado com sucesso!');
+    }, 800); 
 
   } catch(e) { 
-    console.warn(e); 
+    console.warn('Erro na sincronização:', e); 
   }
 }
 

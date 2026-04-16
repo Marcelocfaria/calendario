@@ -3,259 +3,505 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Agenda Inteligente</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Fraunces:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Agenda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ============================================
-       ROOT VARIABLES
-       ============================================ */
     :root {
-      --bg: #F5F3F0;
-      --surface: #FFFFFF;
-      --surface2: #EFECE8;
-      --border: #E5E0D8;
-      --text: #1C1917;
-      --text2: #6B6560;
-      --text3: #A8A09A;
-      --accent: #2D6A4F;
-      --accent-bg: #EAF4EE;
-      --accent2: #C05830;
-      --accent2-bg: #FBF0EC;
-      --blue: #2563A8;
-      --blue-bg: #EBF2FB;
-      --purple: #6B4FA8;
-      --purple-bg: #F2EEF9;
-      --amber: #B06010;
-      --amber-bg: #FBF3E8;
-      --red: #C0282A;
-      --red-bg: #FBEBEB;
-      --r: 14px;
+      --bg:       #F7F5F2;
+      --surface:  #FFFFFF;
+      --surface2: #F0EDE8;
+      --surface3: #E8E4DE;
+      --border:   rgba(0,0,0,0.08);
+      --border2:  rgba(0,0,0,0.14);
+      --text:     #1A1714;
+      --text2:    #6B6460;
+      --text3:    #A8A09A;
+      --ink:      #0E0C0A;
+
+      --green:     #1F6B45;
+      --green-lt:  #EAF4EE;
+      --green-mid: #2D8C5A;
+
+      --terra:     #B84A28;
+      --terra-lt:  #FBF0EC;
+
+      --blue:      #1D5FA8;
+      --blue-lt:   #EAF1FB;
+
+      --violet:    #5C3FA5;
+      --violet-lt: #EFEBFB;
+
+      --amber:     #A05E10;
+      --amber-lt:  #FBF3E8;
+
+      --red:       #B82828;
+      --red-lt:    #FBEBEB;
+
+      --gold:      #C4960A;
+
+      --r:    16px;
       --r-sm: 10px;
-      --r-xs: 7px;
-      --sh: 0 1px 8px rgba(0,0,0,0.07), 0 0 0 0.5px rgba(0,0,0,0.05);
-      --sh-md: 0 4px 20px rgba(0,0,0,0.10);
-      --t: 0.15s cubic-bezier(0.4,0,0.2,1);
+      --r-xs: 6px;
+      --sh:   0 1px 6px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.05);
+      --sh2:  0 4px 24px rgba(0,0,0,0.10);
+      --t:    0.15s cubic-bezier(0.4,0,0.2,1);
     }
 
-    /* ============================================
-       RESET & BASE
-       ============================================ */
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html, body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; max-width: 430px; margin: 0 auto; overscroll-behavior: none; }
-    ::-webkit-scrollbar { width: 0; height: 0; }
 
-    /* ============================================
-       BUTTON STYLES (Shared)
-       ============================================ */
-    [class*="btn-"] { border: none; border-radius: var(--r-sm); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 600; transition: var(--t); display: flex; align-items: center; justify-content: center; }
+    html, body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      max-width: 430px;
+      margin: 0 auto;
+      overscroll-behavior: none;
+    }
 
-    .btn-icon { min-width: 40px; height: 40px; border: 0.5px solid var(--border); background: var(--surface); padding: 0 10px; font-size: 15px; color: var(--text2); }
-    .btn-icon:active { background: var(--surface2); transform: scale(0.93); }
+    ::-webkit-scrollbar { width: 0; }
 
-    .nav-btn { width: 36px; height: 36px; border: 0.5px solid var(--border); background: var(--surface); font-size: 16px; color: var(--text2); }
-    .nav-btn:active { background: var(--surface2); transform: scale(0.93); }
+    /* ─── BUTTONS ─── */
+    button { font-family: 'Syne', sans-serif; border: none; cursor: pointer; transition: var(--t); }
+    button:active { transform: scale(0.94); opacity: 0.82; }
 
-    .btn-sm { width: 32px; height: 32px; border: 0.5px solid var(--border); background: var(--surface2); font-size: 14px; }
-    .btn-sm:active { transform: scale(0.87); }
+    .btn-icon {
+      display: flex; align-items: center; justify-content: center;
+      min-width: 38px; height: 38px; padding: 0 10px;
+      background: var(--surface); border: 0.5px solid var(--border2);
+      border-radius: var(--r-sm); font-size: 14px; color: var(--text2);
+    }
+    .btn-nav {
+      display: flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px;
+      background: var(--surface2); border: 0.5px solid var(--border);
+      border-radius: var(--r-xs); font-size: 16px; color: var(--text2);
+    }
+    .btn-primary {
+      width: 100%; padding: 15px; background: var(--green); color: #fff;
+      font-size: 14px; font-weight: 600; letter-spacing: 0.3px;
+      border-radius: var(--r-sm); margin-top: 6px; min-height: 52px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-secondary {
+      width: 100%; padding: 13px; background: transparent; color: var(--text2);
+      border: 1px solid var(--border2); font-size: 14px; font-weight: 500;
+      border-radius: var(--r-sm); margin-top: 8px; min-height: 48px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-danger {
+      width: 100%; padding: 13px; background: transparent; color: var(--red);
+      border: 1px solid rgba(184,40,40,0.28); font-size: 14px; font-weight: 500;
+      border-radius: var(--r-sm); margin-top: 8px; min-height: 48px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-sm {
+      display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px;
+      background: var(--surface2); border: 0.5px solid var(--border);
+      border-radius: var(--r-xs); font-size: 13px;
+    }
 
-    .btn-primary { width: 100%; padding: 15px; background: var(--accent); color: #fff; font-size: 15px; min-height: 52px; margin-top: 6px; }
-    .btn-primary:active { transform: scale(0.97); opacity: 0.88; }
-
-    .btn-secondary { width: 100%; padding: 13px; background: transparent; color: var(--text2); border: 1px solid var(--border); font-size: 14px; margin-top: 8px; min-height: 48px; }
-    .btn-secondary:active { background: var(--surface2); }
-
-    .btn-danger { width: 100%; padding: 13px; background: transparent; color: var(--red); border: 1px solid rgba(192,40,42,0.3); font-size: 14px; margin-top: 8px; min-height: 48px; }
-    .btn-danger:active { background: var(--red-bg); }
-
-    /* ============================================
-       HEADER
-       ============================================ */
-    .app-header { background: var(--surface); border-bottom: 0.5px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: var(--sh); }
-    .header-top { display: flex; align-items: center; justify-content: space-between; padding: 16px; }
-    .app-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .app-title-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+    /* ─── HEADER ─── */
+    .app-header {
+      background: var(--surface);
+      border-bottom: 0.5px solid var(--border2);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: var(--sh);
+    }
+    .header-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px 10px;
+    }
+    .app-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px; font-weight: 400; color: var(--ink);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .title-mark {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 0 3px var(--green-lt);
+    }
     .header-actions { display: flex; gap: 6px; }
-    .month-nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px 0; }
-    .month-label { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; cursor: pointer; padding: 6px 8px; border-radius: var(--r-xs); transition: var(--t); }
+
+    .month-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 16px 4px;
+    }
+    .month-label {
+      font-family: 'Instrument Serif', serif;
+      font-size: 16px; font-style: italic; color: var(--text);
+      cursor: pointer; padding: 5px 8px; border-radius: var(--r-xs);
+      transition: var(--t);
+    }
     .month-label:active { background: var(--surface2); }
 
-    /* ============================================
-       CALENDAR GRID
-       ============================================ */
-    .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); padding: 8px 8px 4px; gap: 2px; }
-    .weekday { text-align: center; font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.6px; padding: 4px 0; }
-    .weekday.wknd { color: var(--accent2); }
+    .weekdays {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      padding: 4px 8px 2px; gap: 2px;
+    }
+    .weekday {
+      text-align: center; font-size: 10px; font-weight: 700;
+      color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 4px 0;
+    }
+    .weekday.wknd { color: var(--terra); }
 
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; padding: 4px 8px 12px; }
-    .day-cell { display: flex; flex-direction: column; align-items: center; border-radius: var(--r-sm); cursor: pointer; padding: 4px 2px 3px; transition: var(--t); position: relative; min-height: 48px; user-select: none; }
-    .day-cell:active { transform: scale(0.88); background: var(--surface2); }
-    .day-cell.other .day-num { color: var(--text3); opacity: 0.35; }
-    .day-cell.today .day-num { background: var(--text); color: #fff; border-radius: 50%; }
-    .day-cell.sel { background: var(--accent-bg); }
-    .day-cell.sel .day-num { color: var(--accent); font-weight: 700; }
-    .day-cell.wknd:not(.other) .day-num { color: var(--accent2); }
-    .day-cell.today.sel .day-num { background: var(--accent); color: #fff; }
+    /* ─── CALENDAR GRID ─── */
+    .cal-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      gap: 2px; padding: 2px 8px 10px;
+    }
+    .day-cell {
+      display: flex; flex-direction: column; align-items: center;
+      border-radius: var(--r-sm); cursor: pointer; padding: 3px 2px 3px;
+      transition: var(--t); position: relative; min-height: 46px;
+      user-select: none;
+    }
+    .day-cell:active { transform: scale(0.86); background: var(--surface2); }
+    .day-cell.other .day-num { color: var(--text3); opacity: 0.3; }
+    .day-cell.today .day-num {
+      background: var(--ink); color: #fff; border-radius: 50%;
+    }
+    .day-cell.sel { background: var(--green-lt); }
+    .day-cell.sel .day-num { color: var(--green); font-weight: 700; }
+    .day-cell.wknd:not(.other) .day-num { color: var(--terra); }
+    .day-cell.today.sel .day-num { background: var(--green); color: #fff; }
+    .day-num {
+      font-size: 12px; font-weight: 500;
+      width: 24px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 2px; flex-shrink: 0; border-radius: 50%;
+      transition: var(--t);
+    }
+    .day-pips {
+      display: flex; gap: 2px; justify-content: center;
+      overflow: hidden; width: calc(100% - 4px);
+    }
+    .pip { height: 3px; flex: 1; max-width: 9px; border-radius: 2px; }
 
-    .day-num { font-size: 13px; font-weight: 500; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; flex-shrink: 0; border-radius: 50%; transition: var(--t); }
-    .day-pips { display: flex; gap: 2px; justify-content: center; flex-wrap: nowrap; overflow: hidden; width: calc(100% - 4px); }
-    .pip { height: 3px; flex: 1; max-width: 10px; border-radius: 2px; }
-
-    /* ============================================
-       MAIN CONTENT
-       ============================================ */
+    /* ─── MAIN ─── */
     .main { padding: 14px 14px 110px; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* ============================================
-       DAY PANEL
-       ============================================ */
-    .day-panel { background: var(--surface); border-radius: var(--r); box-shadow: var(--sh); margin-bottom: 14px; overflow: hidden; }
-    .day-header { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 0.5px solid var(--border); }
-    .day-date-main { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 700; }
-    .day-date-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
-    .add-btn { width: 36px; height: 36px; background: var(--accent); color: #fff; border: none; border-radius: var(--r-sm); cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: var(--t); flex-shrink: 0; }
-    .add-btn:active { transform: scale(0.90); opacity: 0.85; }
-
+    /* ─── DAY PANEL ─── */
+    .day-panel {
+      background: var(--surface); border-radius: var(--r);
+      box-shadow: var(--sh); margin-bottom: 14px; overflow: hidden;
+    }
+    .day-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px; border-bottom: 0.5px solid var(--border);
+    }
+    .day-date-main {
+      font-family: 'Instrument Serif', serif;
+      font-size: 20px; font-weight: 400;
+    }
+    .day-date-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+    .add-btn {
+      width: 34px; height: 34px; background: var(--green); color: #fff;
+      border-radius: var(--r-sm); font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
     .events-list { padding: 0 14px; }
-    .empty-day { text-align: center; padding: 28px 0 20px; color: var(--text3); font-size: 13px; }
-    .empty-day-icon { font-size: 26px; margin-bottom: 8px; }
+    .empty-day {
+      text-align: center; padding: 26px 0 18px;
+      color: var(--text3); font-size: 13px; line-height: 1.8;
+    }
+    .empty-icon { font-size: 24px; margin-bottom: 6px; }
 
-    .ev-item { display: flex; align-items: stretch; gap: 10px; padding: 12px 0; border-bottom: 0.5px solid var(--border); cursor: pointer; }
+    .ev-item {
+      display: flex; align-items: stretch; gap: 10px;
+      padding: 12px 0; border-bottom: 0.5px solid var(--border);
+      cursor: pointer;
+    }
     .ev-item:last-child { border-bottom: none; }
     .ev-bar { width: 3px; border-radius: 3px; flex-shrink: 0; margin: 2px 0; }
     .ev-body { flex: 1; min-width: 0; }
     .ev-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
-    .ev-meta { font-size: 12px; color: var(--text2); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-    .ev-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
-    .ev-notes { font-size: 12px; color: var(--text2); margin-top: 4px; line-height: 1.4; }
-    .ev-actions { display: flex; gap: 4px; align-items: flex-start; padding-top: 2px; }
+    .ev-meta {
+      font-size: 12px; color: var(--text2);
+      display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+    }
+    .ev-badge {
+      font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 20px;
+    }
+    .ev-notes {
+      font-size: 12px; color: var(--text2);
+      margin-top: 4px; line-height: 1.5;
+    }
+    .ev-actions {
+      display: flex; gap: 4px; align-items: flex-start; padding-top: 2px;
+    }
 
-    /* ============================================
-       SCALES
-       ============================================ */
-    .section-title { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .scale-card { background: var(--surface); border-radius: var(--r); box-shadow: var(--sh); margin-bottom: 10px; display: flex; align-items: center; gap: 12px; padding: 14px 14px 14px 18px; position: relative; overflow: hidden; cursor: pointer; }
-    .scale-accent { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: var(--r) 0 0 var(--r); }
+    /* ─── SCALES ─── */
+    .section-head {
+      font-size: 11px; font-weight: 700; color: var(--text3);
+      text-transform: uppercase; letter-spacing: 0.8px;
+      margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+    }
+    .scale-card {
+      background: var(--surface); border-radius: var(--r);
+      box-shadow: var(--sh); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 14px 14px 18px;
+      position: relative; overflow: hidden; cursor: pointer;
+    }
+    .scale-accent {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 4px; border-radius: var(--r) 0 0 var(--r);
+    }
     .scale-info { flex: 1; min-width: 0; }
     .scale-name { font-size: 14px; font-weight: 600; }
     .scale-detail { font-size: 12px; color: var(--text2); margin-top: 2px; }
-    .scale-days-row { display: flex; gap: 4px; margin-top: 6px; }
-    .sdot { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border: 0.5px solid var(--border); color: var(--text3); }
+    .scale-dots { display: flex; gap: 4px; margin-top: 8px; }
+    .sdot {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700;
+      border: 0.5px solid var(--border2); color: var(--text3);
+    }
     .sdot.on { color: #fff; border-color: transparent; }
 
-    /* ============================================
-       STATS
-       ============================================ */
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-    .stat-card { background: var(--surface); border-radius: var(--r); box-shadow: var(--sh); padding: 16px; text-align: center; }
-    .stat-num { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; }
-    .stat-label { font-size: 11px; color: var(--text2); margin-top: 3px; }
+    /* ─── STATS ─── */
+    .stats-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; margin-bottom: 16px;
+    }
+    .stat-card {
+      background: var(--surface); border-radius: var(--r);
+      box-shadow: var(--sh); padding: 16px; text-align: center;
+    }
+    .stat-num {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px; font-weight: 400; color: var(--ink);
+    }
+    .stat-label { font-size: 11px; color: var(--text2); margin-top: 2px; }
 
-    /* ============================================
-       SHEETS
-       ============================================ */
-    .sheets-panel { background: var(--surface); border-radius: var(--r); box-shadow: var(--sh); padding: 16px; }
-    .status-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-    .sdot-status { width: 9px; height: 9px; border-radius: 50%; background: var(--text3); flex-shrink: 0; }
-    .sdot-status.on { background: #16A34A; box-shadow: 0 0 0 3px rgba(22,163,74,0.18); }
-    .sdot-status.syncing { background: var(--amber); animation: pulse 1s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .status-name { font-size: 13px; font-weight: 600; }
-    .status-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+    /* ─── SHEETS PANEL ─── */
+    .sheets-panel {
+      background: var(--surface); border-radius: var(--r);
+      box-shadow: var(--sh); padding: 16px;
+    }
+    .sync-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .sync-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--text3); }
+    .sync-dot.on { background: #16A34A; box-shadow: 0 0 0 3px rgba(22,163,74,0.15); }
+    .sync-dot.syncing { background: var(--amber); animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .sync-name { font-size: 13px; font-weight: 600; }
+    .sync-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
 
-    /* ============================================
-       BOTTOM TABS
-       ============================================ */
-    .bottom-tabs { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: var(--surface); border-top: 0.5px solid var(--border); display: flex; z-index: 150; padding: 6px 0 max(16px, env(safe-area-inset-bottom)); box-shadow: 0 -2px 12px rgba(0,0,0,0.06); }
-    .tab-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; cursor: pointer; padding: 4px 0; transition: var(--t); }
-    .tab-btn:active { transform: scale(0.92); }
-    .tab-icon { font-size: 19px; line-height: 1; }
+    /* ─── BOTTOM TABS ─── */
+    .bottom-tabs {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 430px;
+      background: var(--surface); border-top: 0.5px solid var(--border2);
+      display: flex; z-index: 150;
+      padding: 6px 0 max(14px, env(safe-area-inset-bottom));
+      box-shadow: 0 -2px 14px rgba(0,0,0,0.06);
+    }
+    .tab-btn {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      gap: 3px; background: none; padding: 4px 0; transition: var(--t);
+    }
+    .tab-btn:active { transform: scale(0.90); }
+    .tab-icon { font-size: 18px; line-height: 1; }
     .tab-label { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 0.2px; }
-    .tab-btn.active .tab-label { color: var(--accent); }
+    .tab-btn.active .tab-label { color: var(--green); }
+    .tab-btn.active .tab-icon { filter: none; }
 
-    /* ============================================
-       FAB (Floating Action Button)
-       ============================================ */
-    .fab-wrap { position: fixed; bottom: 72px; right: 16px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; z-index: 200; }
-    .fab { width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--accent); color: #fff; font-size: 22px; cursor: pointer; box-shadow: 0 4px 16px rgba(45,106,79,0.40); display: flex; align-items: center; justify-content: center; transition: var(--t); }
-    .fab:active { transform: scale(0.88); }
-    .fab-mini { height: 42px; padding: 0 14px; border-radius: 21px; border: none; color: #fff; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; box-shadow: var(--sh-md); display: flex; align-items: center; gap: 8px; transition: var(--t); opacity: 0; transform: scale(0.7) translateY(10px); pointer-events: none; white-space: nowrap; }
-    .fab-mini.vis { opacity: 1; transform: scale(1) translateY(0); pointer-events: all; }
-    .fab-mini:active { transform: scale(0.92); }
+    /* ─── FAB ─── */
+    .fab-wrap {
+      position: fixed; bottom: 76px; right: 16px;
+      display: flex; flex-direction: column; align-items: flex-end;
+      gap: 8px; z-index: 200;
+    }
+    .fab {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: var(--green); color: #fff; font-size: 22px;
+      box-shadow: 0 4px 16px rgba(31,107,69,0.38);
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--t);
+    }
+    .fab.open { transform: rotate(45deg); }
+    .fab-mini {
+      height: 40px; padding: 0 14px; border-radius: 20px;
+      color: #fff; font-size: 13px; font-weight: 600;
+      font-family: 'Syne', sans-serif;
+      box-shadow: var(--sh2);
+      display: flex; align-items: center; gap: 7px;
+      opacity: 0; transform: scale(0.7) translateY(8px);
+      pointer-events: none; white-space: nowrap;
+      transition: opacity 0.18s, transform 0.18s;
+    }
+    .fab-mini.vis {
+      opacity: 1; transform: scale(1) translateY(0);
+      pointer-events: all;
+    }
 
-    /* ============================================
-       MODAL
-       ============================================ */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(20,16,12,0.55); z-index: 300; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(14,12,10,0.52); z-index: 300;
+      display: flex; align-items: flex-end;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.22s ease;
+      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
-    .modal-sheet { background: var(--surface); border-radius: 20px 20px 0 0; width: 100%; max-width: 430px; margin: 0 auto; padding: 0 20px max(28px, env(safe-area-inset-bottom)); transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.25,0.85,0.2,1); max-height: 92vh; overflow-y: auto; }
+    .modal-sheet {
+      background: var(--surface); border-radius: 22px 22px 0 0;
+      width: 100%; max-width: 430px; margin: 0 auto;
+      padding: 0 20px max(28px, env(safe-area-inset-bottom));
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.22,0.9,0.22,1);
+      max-height: 92vh; overflow-y: auto;
+    }
     .modal-overlay.open .modal-sheet { transform: translateY(0); }
-    .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 4px; margin: 14px auto 20px; }
-    .modal-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 700; margin-bottom: 20px; }
+    .modal-handle {
+      width: 38px; height: 4px; background: var(--border2);
+      border-radius: 4px; margin: 14px auto 18px;
+    }
+    .modal-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px; font-weight: 400; margin-bottom: 20px;
+    }
 
-    /* ============================================
-       FORMS
-       ============================================ */
+    /* ─── FORMS ─── */
     .form-group { margin-bottom: 16px; }
-    .form-label { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 7px; display: block; }
-    .form-input { width: 100%; padding: 13px 14px; border: 1px solid var(--border); border-radius: var(--r-sm); font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); background: var(--surface); outline: none; transition: border-color var(--t); appearance: none; -webkit-appearance: none; min-height: 48px; }
-    .form-input:focus { border-color: var(--accent); }
+    .form-label {
+      font-size: 10px; font-weight: 700; color: var(--text3);
+      text-transform: uppercase; letter-spacing: 0.8px;
+      margin-bottom: 7px; display: block;
+    }
+    .form-input {
+      width: 100%; padding: 13px 14px;
+      border: 1px solid var(--border2); border-radius: var(--r-sm);
+      font-family: 'Syne', sans-serif; font-size: 15px;
+      color: var(--text); background: var(--surface);
+      outline: none; transition: border-color var(--t);
+      appearance: none; -webkit-appearance: none; min-height: 48px;
+    }
+    .form-input:focus { border-color: var(--green); }
     .form-input::placeholder { color: var(--text3); }
-    .form-textarea { resize: none; min-height: 80px; padding: 13px 14px; }
+    .form-textarea { resize: none; min-height: 80px; }
 
     .color-picker { display: flex; gap: 8px; flex-wrap: wrap; }
-    .clr-opt { width: 34px; height: 34px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: var(--t); position: relative; }
-    .clr-opt.sel { border-color: rgba(0,0,0,0.25); }
-    .clr-opt.sel::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 700; }
+    .clr-opt {
+      width: 32px; height: 32px; border-radius: 50%;
+      cursor: pointer; border: 3px solid transparent;
+      transition: var(--t); position: relative;
+    }
+    .clr-opt.sel { border-color: rgba(0,0,0,0.22); }
+    .clr-opt.sel::after {
+      content: '✓'; position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 13px; font-weight: 700;
+    }
 
     .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .type-btn { padding: 11px 8px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--text2); text-align: center; transition: var(--t); min-height: 46px; }
-    .type-btn:active { transform: scale(0.95); }
-    .type-btn.active { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+    .type-btn {
+      padding: 11px 8px; border: 1px solid var(--border2);
+      border-radius: var(--r-sm); background: var(--surface);
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
+      color: var(--text2); text-align: center; transition: var(--t); min-height: 46px;
+    }
+    .type-btn.active {
+      border-color: var(--green); background: var(--green-lt); color: var(--green);
+    }
 
     .days-row { display: flex; gap: 6px; justify-content: space-between; }
-    .dtog { flex: 1; height: 42px; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface); font-size: 11px; font-weight: 700; cursor: pointer; transition: var(--t); color: var(--text2); display: flex; align-items: center; justify-content: center; }
-    .dtog:active { transform: scale(0.90); }
-    .dtog.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .dtog {
+      flex: 1; height: 40px; border-radius: var(--r-sm);
+      border: 1px solid var(--border2); background: var(--surface);
+      font-size: 10px; font-weight: 700; cursor: pointer;
+      transition: var(--t); color: var(--text2);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+    }
+    .dtog.on { background: var(--green); border-color: var(--green); color: #fff; }
 
-    /* ============================================
-       UTILITIES
-       ============================================ */
-    .toast { position: fixed; bottom: 76px; left: 50%; transform: translateX(-50%) translateY(12px); background: var(--text); color: #fff; padding: 10px 20px; border-radius: 22px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.25s ease; z-index: 500; white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,0.18); pointer-events: none; }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text2); font-weight: 500; background: var(--surface); border-radius: 20px; padding: 4px 10px; box-shadow: var(--sh); }
-    .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
-
-    .info-box { background: var(--accent-bg); border-radius: var(--r-sm); padding: 14px; margin-bottom: 18px; border: 0.5px solid rgba(45,106,79,0.15); }
-    .info-box-title { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
-    .info-box-body { font-size: 12px; color: var(--text2); line-height: 1.7; }
-
-    pre { background: var(--surface2); border-radius: var(--r-sm); padding: 12px; font-size: 11px; color: var(--text2); white-space: pre-wrap; line-height: 1.5; overflow-x: auto; }
     .time-row { display: flex; gap: 8px; }
     .time-row .form-input { flex: 1; }
+
+    /* ─── LEGEND ─── */
+    .legend { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+    .legend-item {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11px; color: var(--text2); font-weight: 500;
+      background: var(--surface); border-radius: 20px;
+      padding: 4px 10px; box-shadow: var(--sh);
+    }
+    .legend-dot { width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0; }
+
+    /* ─── INFO BOX ─── */
+    .info-box {
+      background: var(--green-lt); border-radius: var(--r-sm);
+      padding: 14px; margin-bottom: 18px;
+      border: 0.5px solid rgba(31,107,69,0.14);
+    }
+    .info-box-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+    .info-box-body { font-size: 12px; color: var(--text2); line-height: 1.7; }
+
+    pre {
+      background: var(--surface2); border-radius: var(--r-sm);
+      padding: 12px; font-size: 11px; color: var(--text2);
+      white-space: pre-wrap; line-height: 1.5; overflow-x: auto;
+    }
+
+    .validation-msg {
+      font-size: 11px; color: var(--red); margin-top: 5px;
+      display: none;
+    }
+    .validation-msg.show { display: block; }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed; bottom: 80px; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--ink); color: #fff;
+      padding: 10px 20px; border-radius: 22px;
+      font-size: 13px; font-weight: 500;
+      opacity: 0; transition: all 0.22s ease; z-index: 500;
+      white-space: nowrap; box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-scales {
+      background: var(--surface); border-radius: var(--r);
+      box-shadow: var(--sh); padding: 32px 20px;
+      text-align: center; margin-bottom: 12px;
+    }
+    .empty-scales p { font-size: 13px; color: var(--text3); margin-top: 8px; }
   </style>
 </head>
 
 <body>
 
-<div class="app-header">
+<!-- ───────────────── HEADER ───────────────── -->
+<header class="app-header">
   <div class="header-top">
     <span class="app-title">
-      <span class="app-title-dot"></span>Minha Agenda
+      <span class="title-mark"></span>Agenda
     </span>
     <div class="header-actions">
-      <button class="btn-icon" onclick="App.openSheetsModal()">GS</button>
-      <button class="btn-icon" onclick="App.openScaleModal()">⚙️</button>
+      <button class="btn-icon" onclick="App.openSheetsModal()" title="Google Sheets">
+        <span style="font-size:13px;font-weight:700;letter-spacing:-0.5px">GS</span>
+      </button>
+      <button class="btn-icon" onclick="App.openScaleModal()" title="Nova escala">⚙️</button>
     </div>
   </div>
+
   <div class="month-nav">
-    <button class="nav-btn" onclick="App.changeMonth(-1)">‹</button>
+    <button class="btn-nav" onclick="App.changeMonth(-1)">‹</button>
     <span class="month-label" id="monthLabel" onclick="App.goToToday()"></span>
-    <button class="nav-btn" onclick="App.changeMonth(1)">›</button>
+    <button class="btn-nav" onclick="App.changeMonth(1)">›</button>
   </div>
+
   <div class="weekdays">
     <div class="weekday wknd">D</div>
     <div class="weekday">S</div>
@@ -265,10 +511,12 @@
     <div class="weekday">S</div>
     <div class="weekday wknd">S</div>
   </div>
-  <div class="cal-grid" id="calGrid"></div>
-</div>
 
-<div class="bottom-tabs">
+  <div class="cal-grid" id="calGrid"></div>
+</header>
+
+<!-- ───────────────── BOTTOM TABS ───────────────── -->
+<nav class="bottom-tabs">
   <button class="tab-btn active" onclick="App.switchTab('agenda')" id="tab-agenda">
     <span class="tab-icon">📋</span>
     <span class="tab-label">Agenda</span>
@@ -281,40 +529,45 @@
     <span class="tab-icon">📊</span>
     <span class="tab-label">Resumo</span>
   </button>
-</div>
+</nav>
 
-<div class="main">
+<!-- ───────────────── MAIN CONTENT ───────────────── -->
+<main class="main">
+
+  <!-- AGENDA TAB -->
   <div class="tab-content active" id="content-agenda">
     <div class="legend" id="legend"></div>
     <div class="day-panel" id="dayPanel">
       <div class="day-header">
         <div>
           <div class="day-date-main" id="panelDate">Selecione um dia</div>
-          <div class="day-date-sub" id="panelSub"></div>
+          <div class="day-date-sub" id="panelSub">Toque no calendário acima</div>
         </div>
         <button class="add-btn" onclick="App.openEventModal()">+</button>
       </div>
       <div class="events-list" id="dayEvents">
         <div class="empty-day">
-          <div class="empty-day-icon">🗓️</div>
-          Toque em um dia do calendário
+          <div class="empty-icon">🗓️</div>
+          Nenhum compromisso aqui
         </div>
       </div>
     </div>
   </div>
 
+  <!-- ESCALAS TAB -->
   <div class="tab-content" id="content-escalas">
-    <div class="section-title">⚙️ Escalas de Serviço</div>
+    <div class="section-head">Escalas de serviço</div>
     <div id="scaleCards"></div>
     <button class="btn-secondary" onclick="App.openScaleModal()">+ Nova Escala</button>
   </div>
 
+  <!-- RESUMO TAB -->
   <div class="tab-content" id="content-resumo">
-    <div class="section-title">📊 Resumo do Mês</div>
+    <div class="section-head" id="resumoTitle">Resumo do mês</div>
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-num" id="statWork">0</div>
-        <div class="stat-label">Dias de trabalho</div>
+        <div class="stat-label">Plantões no mês</div>
       </div>
       <div class="stat-card">
         <div class="stat-num" id="statEvents">0</div>
@@ -322,7 +575,7 @@
       </div>
       <div class="stat-card">
         <div class="stat-num" id="statFree">0</div>
-        <div class="stat-label">Dias livres</div>
+        <div class="stat-label">Dias de folga</div>
       </div>
       <div class="stat-card">
         <div class="stat-num" id="statHours">—</div>
@@ -330,28 +583,30 @@
       </div>
     </div>
     <div class="sheets-panel">
-      <div class="status-row">
-        <div class="sdot-status" id="statusDot"></div>
+      <div class="sync-row">
+        <div class="sync-dot" id="statusDot"></div>
         <div>
-          <div class="status-name" id="statusText">Google Sheets desconectado</div>
-          <div class="status-sub" id="syncInfo">Configure para sincronizar dados</div>
+          <div class="sync-name" id="statusText">Google Sheets desconectado</div>
+          <div class="sync-sub" id="syncInfo">Configure para sincronizar dados</div>
         </div>
       </div>
       <button class="btn-secondary" style="margin:0" onclick="App.openSheetsModal()">⚙️ Configurar Planilha</button>
     </div>
   </div>
-</div>
 
+</main>
+
+<!-- ───────────────── FAB ───────────────── -->
 <div class="fab-wrap">
-  <button class="fab-mini" id="fabWork" style="background:var(--accent)" onclick="App.quickAddWork()">🏢 Trabalho</button>
+  <button class="fab-mini" id="fabWork" style="background:var(--green)" onclick="App.quickAddWork()">🏢 Trabalho</button>
   <button class="fab-mini" id="fabEvent" style="background:var(--blue)" onclick="App.openEventModal()">📝 Evento</button>
   <button class="fab" id="mainFab" onclick="App.toggleFab()">+</button>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- MODALS (Event, Scale, Sheets) -->
-<div class="modal-overlay" id="eventModal" onclick="App.closeOnBg(event, 'eventModal')">
+<!-- ───────────────── MODAL: EVENTO ───────────────── -->
+<div class="modal-overlay" id="eventModal" onclick="App.closeOnBg(event,'eventModal')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title" id="eventModalTitle">Novo Compromisso</div>
@@ -359,21 +614,23 @@
     <div class="form-group">
       <label class="form-label">Tipo</label>
       <div class="type-grid">
-        <button class="type-btn active" data-type="evento" onclick="App.setEventType(this)">📅 Evento</button>
-        <button class="type-btn" data-type="trabalho" onclick="App.setEventType(this)">🏢 Trabalho</button>
-        <button class="type-btn" data-type="pessoal" onclick="App.setEventType(this)">👤 Pessoal</button>
-        <button class="type-btn" data-type="lembrete" onclick="App.setEventType(this)">🔔 Lembrete</button>
+        <button class="type-btn active" data-type="evento"    onclick="App.setEventType(this)">📅 Evento</button>
+        <button class="type-btn"        data-type="trabalho"  onclick="App.setEventType(this)">🏢 Trabalho</button>
+        <button class="type-btn"        data-type="pessoal"   onclick="App.setEventType(this)">👤 Pessoal</button>
+        <button class="type-btn"        data-type="lembrete"  onclick="App.setEventType(this)">🔔 Lembrete</button>
       </div>
     </div>
 
     <div class="form-group">
-      <label class="form-label">Título</label>
-      <input type="text" class="form-input" id="evTitle" placeholder="Ex: Reunião com equipe" autocomplete="off">
+      <label class="form-label">Título *</label>
+      <input type="text" class="form-input" id="evTitle" placeholder="Ex: Reunião com equipe" autocomplete="off" maxlength="80">
+      <div class="validation-msg" id="evTitleErr">Título é obrigatório</div>
     </div>
 
     <div class="form-group">
-      <label class="form-label">Data</label>
+      <label class="form-label">Data *</label>
       <input type="date" class="form-input" id="evDate">
+      <div class="validation-msg" id="evDateErr">Data é obrigatória</div>
     </div>
 
     <div class="form-group">
@@ -394,20 +651,22 @@
       <textarea class="form-input form-textarea" id="evNotes" placeholder="Detalhes adicionais..."></textarea>
     </div>
 
-    <button class="btn-primary" onclick="App.saveEvent()">Salvar</button>
-    <button id="evDeleteBtn" class="btn-danger" style="display:none" onclick="App.confirmDeleteEvent()">Excluir compromisso</button>
-    <button class="btn-secondary" onclick="App.closeModal('eventModal')">Cancelar</button>
+    <button class="btn-primary"    onclick="App.saveEvent()">Salvar</button>
+    <button class="btn-danger"     id="evDeleteBtn" style="display:none" onclick="App.confirmDeleteEvent()">Excluir compromisso</button>
+    <button class="btn-secondary"  onclick="App.closeModal('eventModal')">Cancelar</button>
   </div>
 </div>
 
-<div class="modal-overlay" id="scaleModal" onclick="App.closeOnBg(event, 'scaleModal')">
+<!-- ───────────────── MODAL: ESCALA ───────────────── -->
+<div class="modal-overlay" id="scaleModal" onclick="App.closeOnBg(event,'scaleModal')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
-    <div class="modal-title">Nova Escala</div>
+    <div class="modal-title" id="scaleModalTitle">Nova Escala</div>
 
     <div class="form-group">
-      <label class="form-label">Nome</label>
-      <input type="text" class="form-input" id="scName" placeholder="Ex: Plantão, Escala Loja..." autocomplete="off">
+      <label class="form-label">Nome *</label>
+      <input type="text" class="form-input" id="scName" placeholder="Ex: Plantão, Escala Loja..." autocomplete="off" maxlength="60">
+      <div class="validation-msg" id="scNameErr">Nome é obrigatório</div>
     </div>
 
     <div class="form-group">
@@ -433,8 +692,9 @@
     </div>
 
     <div class="form-group" id="scStartDateGroup" style="display:none">
-      <label class="form-label">Data de início do ciclo</label>
+      <label class="form-label">Data de início do ciclo *</label>
       <input type="date" class="form-input" id="scStartDate">
+      <div class="validation-msg" id="scStartDateErr">Informe a data de início do ciclo</div>
     </div>
 
     <div class="form-group" id="scDaysGroup">
@@ -451,30 +711,27 @@
     </div>
 
     <div class="form-group" id="scCustomGroup" style="display:none">
-      <label class="form-label">Datas específicas</label>
-      <textarea class="form-input form-textarea" id="scCustomDates" placeholder="Uma data por linha ou separadas por vírgula" style="min-height:90px"></textarea>
-      <div style="font-size:11px;color:var(--text3);margin-top:5px;">Formato: AAAA-MM-DD</div>
+      <label class="form-label">Datas específicas (AAAA-MM-DD)</label>
+      <textarea class="form-input form-textarea" id="scCustomDates"
+        placeholder="2025-06-10&#10;2025-06-24&#10;2025-07-08" style="min-height:90px"></textarea>
+      <div class="validation-msg" id="scCustomErr"></div>
+      <div style="font-size:11px;color:var(--text3);margin-top:5px;">Uma data por linha ou separadas por vírgula</div>
     </div>
 
-    <div class="form-group" id="scBiweeklyInfo" style="display:none">
-      <div style="background:var(--amber-bg);border-radius:var(--r-sm);padding:12px;font-size:13px;color:var(--amber);border:0.5px solid rgba(176,96,16,0.2);">
-        ℹ️ Informe a data de início do ciclo quinzenal acima.
-      </div>
-    </div>
-
-    <button class="btn-primary" onclick="App.saveScale()">Salvar Escala</button>
-    <button id="scDeleteBtn" class="btn-danger" style="display:none" onclick="App.confirmDeleteScale()">Excluir escala</button>
+    <button class="btn-primary"   onclick="App.saveScale()">Salvar Escala</button>
+    <button class="btn-danger"    id="scDeleteBtn" style="display:none" onclick="App.confirmDeleteScale()">Excluir escala</button>
     <button class="btn-secondary" onclick="App.closeModal('scaleModal')">Cancelar</button>
   </div>
 </div>
 
-<div class="modal-overlay" id="sheetsModal" onclick="App.closeOnBg(event, 'sheetsModal')">
+<!-- ───────────────── MODAL: SHEETS ───────────────── -->
+<div class="modal-overlay" id="sheetsModal" onclick="App.closeOnBg(event,'sheetsModal')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">Google Sheets</div>
 
     <div class="info-box">
-      <div class="info-box-title">Como conectar:</div>
+      <div class="info-box-title">Como conectar</div>
       <div class="info-box-body">
         1. Crie uma planilha no Google Sheets<br>
         2. Arquivo → <strong>Publicar na web</strong><br>
@@ -485,7 +742,7 @@
     </div>
 
     <div class="form-group">
-      <label class="form-label">URL da planilha (CSV)</label>
+      <label class="form-label">URL de leitura (CSV público)</label>
       <input type="url" class="form-input" id="shUrl" placeholder="https://docs.google.com/spreadsheets/...">
     </div>
 
@@ -496,65 +753,70 @@
 
     <div class="form-group">
       <label class="form-label">Nome da aba</label>
-      <input type="text" class="form-input" id="shTab" placeholder="Agenda" value="Agenda">
+      <input type="text" class="form-input" id="shTab" placeholder="Agenda">
     </div>
 
-    <details style="margin-bottom:16px;">
-      <summary style="font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;padding:8px 0;">Ver exemplo de Apps Script</summary>
+    <details style="margin-bottom:16px">
+      <summary style="font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;padding:8px 0">Ver exemplo de Apps Script</summary>
       <pre style="margin-top:8px">function doPost(e) {
   var ss = SpreadsheetApp.openById('SEU_ID');
   var sh = ss.getSheetByName('Agenda');
   var d = JSON.parse(e.postData.contents);
-  sh.appendRow([d.date, d.title, d.type, d.start, d.end, d.notes, d.color]);
+  sh.appendRow([d.date,d.title,d.type,
+                d.start,d.end,d.notes,d.color]);
   return ContentService.createTextOutput('OK');
 }</pre>
     </details>
 
-    <button class="btn-primary" onclick="App.saveSheets()">Salvar configuração</button>
-    <button class="btn-secondary" onclick="App.testSheets()">🔍 Testar conexão</button>
+    <button class="btn-primary"   onclick="App.saveSheets()">Salvar configuração</button>
+    <button class="btn-secondary" id="testSheetsBtn" onclick="App.testSheets()">🔍 Testar conexão</button>
     <button class="btn-secondary" onclick="App.closeModal('sheetsModal')">Fechar</button>
   </div>
 </div>
 
 <script>
-// ============================================
-// CONSTANTS & CONFIG
-// ============================================
-const Config = {
-  COLORS: ['#2D6A4F','#C05830','#2563A8','#6B4FA8','#B06010','#C0282A','#1B8A5A','#1C4E80','#6D4A7A','#0D5F8A','#9A3B3B','#2E7DAA'],
-  MONTHS: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-  WEEKDAYS: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
-  STORAGE_KEY: 'agenda_v4',
-  CALENDAR_WEEKS: 6,
-  DAYS_PER_WEEK: 7
-};
+// ═══════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════
+const COLORS = [
+  '#1F6B45','#B84A28','#1D5FA8','#5C3FA5',
+  '#A05E10','#B82828','#1B8A5A','#1C4E80',
+  '#6D4A7A','#0D5F8A','#9A3B3B','#2E7DAA'
+];
+const MONTHS   = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const WEEKDAYS = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const WD_SHORT = ['D','S','T','Q','Q','S','S'];
+const STORAGE_KEY = 'agenda_v5';
 
-// ============================================
-// STATE MANAGEMENT
-// ============================================
-const State = {
+// ═══════════════════════════════════════════════
+//  STATE — only persistent data survives reload
+// ═══════════════════════════════════════════════
+let State = {
   events: [],
   scales: [],
-  selDate: null,
-  year: new Date().getFullYear(),
-  month: new Date().getMonth(),
-  tab: 'agenda',
-  fabOpen: false,
+  sheets: { url: '', script: '', tab: 'Agenda', connected: false, lastSync: null },
+
+  // runtime-only (not saved)
+  selDate:  null,
+  year:     new Date().getFullYear(),
+  month:    new Date().getMonth(),
+  tab:      'agenda',
+  fabOpen:  false,
   editEvId: null,
   editScId: null,
-  evType: 'evento',
-  evColor: Config.COLORS[0],
-  scColor: Config.COLORS[0],
-  scDays: [],
-  sheets: { url: '', script: '', tab: 'Agenda', connected: false, lastSync: null }
+  evType:   'evento',
+  evColor:  COLORS[0],
+  scColor:  COLORS[0],
+  scDays:   [],
 };
 
-// ============================================
-// UTILITY FUNCTIONS
-// ============================================
+// ═══════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════
 const Utils = {
+  // Consistent local date string AAAA-MM-DD, no UTC drift
   dateStr(y, m, d) {
-    return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    return `${y}-${String(m + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
   },
 
   todayStr() {
@@ -562,219 +824,301 @@ const Utils = {
     return this.dateStr(t.getFullYear(), t.getMonth(), t.getDate());
   },
 
-  parseDate(str) {
+  // Parse AAAA-MM-DD as LOCAL date (avoids UTC-offset bug)
+  parseLocal(str) {
     const [y, m, d] = str.split('-').map(Number);
     return new Date(y, m - 1, d);
   },
 
-  diffInDays(d1, d2) {
-    return Math.floor((d1 - d2) / (1000 * 60 * 60 * 24));
+  // Whole-day difference in days (DST-safe: compare midnight-to-midnight)
+  daysDiff(d1, d2) {
+    const ms1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
+    const ms2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
+    return Math.round((ms1 - ms2) / 86400000);
   },
 
-  showToast(msg, duration = 2000) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), duration);
+  // Validate AAAA-MM-DD format
+  isValidDate(str) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return false;
+    const d = this.parseLocal(str);
+    return d instanceof Date && !isNaN(d);
+  },
+
+  toast(msg, ms = 2200) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('show'), ms);
   }
 };
 
-// ============================================
-// CALENDAR ENGINE
-// ============================================
+// ═══════════════════════════════════════════════
+//  STORAGE — save only persistent data
+// ═══════════════════════════════════════════════
+const Storage = {
+  load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      // Only restore persistent fields; runtime state stays at defaults
+      if (Array.isArray(saved.events)) State.events = saved.events;
+      if (Array.isArray(saved.scales)) State.scales = saved.scales;
+      if (saved.sheets && typeof saved.sheets === 'object') {
+        State.sheets = Object.assign({}, State.sheets, saved.sheets);
+      }
+    } catch(e) { console.warn('Storage.load:', e); }
+  },
+
+  save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        events: State.events,
+        scales: State.scales,
+        sheets: State.sheets
+      }));
+    } catch(e) { console.warn('Storage.save:', e); }
+  }
+};
+
+// ═══════════════════════════════════════════════
+//  CALENDAR
+// ═══════════════════════════════════════════════
 const Calendar = {
   render() {
-    document.getElementById('monthLabel').textContent = `${Config.MONTHS[State.month]} ${State.year}`;
-    const grid = document.getElementById('calGrid');
+    document.getElementById('monthLabel').textContent =
+      `${MONTHS[State.month]} ${State.year}`;
+
     const today = Utils.todayStr();
-    
-    const firstDate = new Date(Date.UTC(State.year, State.month, 1));
-    const firstDow = firstDate.getUTCDay();
+    const firstDow    = new Date(State.year, State.month, 1).getDay(); // local
     const daysInMonth = new Date(State.year, State.month + 1, 0).getDate();
-    const daysInPrev = new Date(State.year, State.month, 0).getDate();
+    const daysInPrev  = new Date(State.year, State.month, 0).getDate();
+
+    // Min weeks needed (4, 5, or 6)
+    const totalCells = Math.ceil((firstDow + daysInMonth) / 7) * 7;
 
     let html = '';
-    const totalCells = Config.CALENDAR_WEEKS * Config.DAYS_PER_WEEK;
-
     for (let i = 0; i < totalCells; i++) {
-      const { cellDate, isOther } = this._getCellInfo(i, firstDow, daysInMonth, daysInPrev);
-      const date = Utils.parseDate(cellDate);
-      const dow = date.getDay();
-      const dayNum = date.getDate();
-      const isToday = cellDate === today;
-      const isSel = cellDate === State.selDate;
-      const isWknd = dow === 0 || dow === 6;
+      const { ds, isOther } = this._cell(i, firstDow, daysInMonth, daysInPrev);
+      const date = Utils.parseLocal(ds);
+      const dow  = date.getDay();
+      const isWknd  = dow === 0 || dow === 6;
+      const isToday = ds === today;
+      const isSel   = ds === State.selDate;
 
-      const evs = State.events.filter(e => e.date === cellDate);
-      const scales = this.getScalesForDate(cellDate);
-      const allColors = [...scales.map(s => s.color), ...evs.map(e => e.color)].slice(0, 4);
+      const evs    = State.events.filter(e => e.date === ds);
+      const scales = this.scalesForDate(ds);
+      const pips   = [...scales.map(s => s.color), ...evs.map(e => e.color)]
+        .slice(0, 4)
+        .map(c => `<div class="pip" style="background:${c}"></div>`)
+        .join('');
 
-      const classes = ['day-cell', isOther && 'other', isToday && 'today', isSel && 'sel', (isWknd && !isOther) && 'wknd'].filter(Boolean).join(' ');
-      const pips = allColors.map(c => `<div class="pip" style="background:${c}"></div>`).join('');
+      const cls = ['day-cell',
+        isOther && 'other',
+        isToday && 'today',
+        isSel   && 'sel',
+        (isWknd && !isOther) && 'wknd'
+      ].filter(Boolean).join(' ');
 
-      html += `<div class="${classes}" onclick="App.selectDate('${cellDate}')"><div class="day-num">${dayNum}</div><div class="day-pips">${pips}</div></div>`;
+      html += `<div class="${cls}" onclick="App.selectDate('${ds}')">` +
+              `<div class="day-num">${date.getDate()}</div>` +
+              `<div class="day-pips">${pips}</div></div>`;
     }
 
-    grid.innerHTML = html;
+    document.getElementById('calGrid').innerHTML = html;
   },
 
-  _getCellInfo(i, firstDow, daysInMonth, daysInPrev) {
+  _cell(i, firstDow, daysInMonth, daysInPrev) {
     if (i < firstDow) {
-      const prevM = State.month === 0 ? 11 : State.month - 1;
-      const prevY = State.month === 0 ? State.year - 1 : State.year;
-      const d = daysInPrev - (firstDow - 1 - i);
-      return { cellDate: Utils.dateStr(prevY, prevM, d), isOther: true };
+      const pm = State.month === 0 ? 11 : State.month - 1;
+      const py = State.month === 0 ? State.year - 1 : State.year;
+      return { ds: Utils.dateStr(py, pm, daysInPrev - (firstDow - 1 - i)), isOther: true };
     }
     if (i >= firstDow + daysInMonth) {
-      const nextM = State.month === 11 ? 0 : State.month + 1;
-      const nextY = State.month === 11 ? State.year + 1 : State.year;
-      const d = i - (firstDow + daysInMonth) + 1;
-      return { cellDate: Utils.dateStr(nextY, nextM, d), isOther: true };
+      const nm = State.month === 11 ? 0 : State.month + 1;
+      const ny = State.month === 11 ? State.year + 1 : State.year;
+      return { ds: Utils.dateStr(ny, nm, i - (firstDow + daysInMonth) + 1), isOther: true };
     }
-    const d = i - firstDow + 1;
-    return { cellDate: Utils.dateStr(State.year, State.month, d), isOther: false };
+    return { ds: Utils.dateStr(State.year, State.month, i - firstDow + 1), isOther: false };
   },
 
-  getScalesForDate(ds) {
-    const date = Utils.parseDate(ds);
-    const dow = date.getDay();
+  scalesForDate(ds) {
+    const date = Utils.parseLocal(ds);
+    const dow  = date.getDay();
 
     return State.scales.filter(sc => {
-      if (sc.repeat === 'weekly') return sc.days.includes(dow);
+      if (sc.repeat === 'weekly') {
+        return sc.days.includes(dow);
+      }
       if (sc.repeat === 'biweekly') {
         if (!sc.days.includes(dow) || !sc.startDate) return false;
-        const start = Utils.parseDate(sc.startDate);
-        const diffDays = Utils.diffInDays(date, start);
-        if (diffDays < 0) return false;
-        return Math.floor(diffDays / 7) % 2 === 0;
+        const start = Utils.parseLocal(sc.startDate);
+        const diff  = Utils.daysDiff(date, start); // DST-safe
+        return diff >= 0 && Math.floor(diff / 7) % 2 === 0;
       }
-      if (sc.repeat === 'custom') return (sc.customDates || []).includes(ds);
+      if (sc.repeat === 'custom') {
+        return (sc.customDates || []).includes(ds);
+      }
       return false;
     });
   }
 };
 
-// ============================================
-// STORAGE
-// ============================================
-const Storage = {
-  load() {
-    try {
-      const data = localStorage.getItem(Config.STORAGE_KEY);
-      if (data) Object.assign(State, JSON.parse(data));
-    } catch (e) {
-      console.error('Storage load error:', e);
-    }
-  },
-
-  save() {
-    try {
-      localStorage.setItem(Config.STORAGE_KEY, JSON.stringify({ events: State.events, scales: State.scales, sheets: State.sheets }));
-    } catch (e) {
-      console.error('Storage save error:', e);
-    }
-  }
-};
-
-// ============================================
-// MAIN APP NAMESPACE
-// ============================================
+// ═══════════════════════════════════════════════
+//  APP
+// ═══════════════════════════════════════════════
 const App = {
+
+  // ── INIT ──
   init() {
     Storage.load();
-    this._renderColorPickers();
+    this._buildColorPickers();
     Calendar.render();
+    this._renderLegend();
     this._renderScales();
     this._renderStats();
+    this._updateSheetsStatus();
+    // select today by default
+    const td = Utils.todayStr();
+    const tdMonth = new Date().getMonth();
+    if (tdMonth === State.month) {
+      State.selDate = td;
+      Calendar.render();
+      this.renderDayPanel();
+    }
   },
 
-  // ── MONTH NAVIGATION ──
+  // ── MONTH NAV ──
   changeMonth(delta) {
     State.month += delta;
     if (State.month > 11) { State.month = 0; State.year++; }
     else if (State.month < 0) { State.month = 11; State.year--; }
+    // When changing month, deselect so no stale panel
+    State.selDate = null;
     Calendar.render();
+    this._renderStats();
+    this.renderDayPanel();
   },
 
   goToToday() {
-    const today = new Date();
-    State.year = today.getFullYear();
-    State.month = today.getMonth();
+    const now = new Date();
+    State.year  = now.getFullYear();
+    State.month = now.getMonth();
+    State.selDate = Utils.todayStr();
     Calendar.render();
+    this.renderDayPanel();
+    this._renderStats();
   },
 
-  // ── DATE SELECTION & TABS ──
-  selectDate(d) {
-    State.selDate = d;
+  // ── DATE SELECT ──
+  selectDate(ds) {
+    State.selDate = ds;
     Calendar.render();
     this.renderDayPanel();
     if (State.tab !== 'agenda') this.switchTab('agenda');
+    if (State.fabOpen) this.closeFab();
   },
 
+  // ── TABS ──
   switchTab(tab) {
     State.tab = tab;
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.getElementById(`content-${tab}`).classList.add('active');
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     document.getElementById(`tab-${tab}`).classList.add('active');
+    if (tab === 'resumo') this._renderStats();
+    if (State.fabOpen) this.closeFab();
   },
 
+  // ── DAY PANEL ──
   renderDayPanel() {
-    if (!State.selDate) return;
-    const date = Utils.parseDate(State.selDate);
-    document.getElementById('panelDate').textContent = `${date.getDate()} de ${Config.MONTHS[date.getMonth()]}`;
-    document.getElementById('panelSub').textContent = Config.WEEKDAYS[date.getDay()];
-
-    const evs = State.events.filter(e => e.date === State.selDate);
-    const list = document.getElementById('dayEvents');
-    
-    if (evs.length === 0) {
-      list.innerHTML = '<div class="empty-day"><div class="empty-day-icon">🗓️</div>Toque em um dia do calendário</div>';
+    if (!State.selDate) {
+      document.getElementById('panelDate').textContent = 'Selecione um dia';
+      document.getElementById('panelSub').textContent  = 'Toque no calendário acima';
+      document.getElementById('dayEvents').innerHTML   =
+        '<div class="empty-day"><div class="empty-icon">🗓️</div>Nenhum compromisso aqui</div>';
       return;
     }
 
-    list.innerHTML = evs.map(ev => this._createEventItemHTML(ev)).join('');
+    const date = Utils.parseLocal(State.selDate);
+    document.getElementById('panelDate').textContent =
+      `${date.getDate()} de ${MONTHS[date.getMonth()]}`;
+    document.getElementById('panelSub').textContent = WEEKDAYS[date.getDay()];
+
+    const evs = State.events
+      .filter(e => e.date === State.selDate)
+      .sort((a, b) => (a.start || '').localeCompare(b.start || ''));
+
+    const scales = Calendar.scalesForDate(State.selDate);
+
+    const listEl = document.getElementById('dayEvents');
+
+    if (evs.length === 0 && scales.length === 0) {
+      listEl.innerHTML = '<div class="empty-day"><div class="empty-icon">🌿</div>Dia livre</div>';
+      return;
+    }
+
+    // Show applicable scales as read-only items
+    const scaleHTML = scales.map(sc => `
+      <div class="ev-item" style="cursor:default">
+        <div class="ev-bar" style="background:${sc.color}"></div>
+        <div class="ev-body">
+          <div class="ev-title">${this._esc(sc.name)}</div>
+          <div class="ev-meta">
+            <span class="ev-badge" style="background:${sc.color}20;color:${sc.color}">escala</span>
+            ${sc.start ? `<span>${sc.start}${sc.end ? ' – ' + sc.end : ''}</span>` : ''}
+          </div>
+        </div>
+        <div class="ev-actions">
+          <button class="btn-sm" onclick="App.editScaleById('${sc.id}',event)" title="Editar escala">✏️</button>
+        </div>
+      </div>`).join('');
+
+    const evHTML = evs.map(ev => this._evHTML(ev)).join('');
+    listEl.innerHTML = scaleHTML + evHTML;
   },
 
-  _createEventItemHTML(ev) {
-    const timeStr = ev.start ? `${ev.start}${ev.end ? ' - ' + ev.end : ''}` : '';
-    return `<div class="ev-item" onclick="App.editEvent('${ev.id}', event)">
+  _evHTML(ev) {
+    const time = ev.start ? `${ev.start}${ev.end ? ' – ' + ev.end : ''}` : '';
+    return `<div class="ev-item" onclick="App.editEvent('${ev.id}',event)">
       <div class="ev-bar" style="background:${ev.color}"></div>
       <div class="ev-body">
-        <div class="ev-title">${this._escape(ev.title)}</div>
+        <div class="ev-title">${this._esc(ev.title)}</div>
         <div class="ev-meta">
           <span class="ev-badge" style="background:${ev.color}20;color:${ev.color}">${ev.type}</span>
-          ${timeStr ? `<span>${timeStr}</span>` : ''}
+          ${time ? `<span>${time}</span>` : ''}
         </div>
-        ${ev.notes ? `<div class="ev-notes">${this._escape(ev.notes)}</div>` : ''}
+        ${ev.notes ? `<div class="ev-notes">${this._esc(ev.notes)}</div>` : ''}
       </div>
       <div class="ev-actions">
-        <button class="btn-sm" onclick="App.editEvent('${ev.id}', event)">✏️</button>
-        <button class="btn-sm" onclick="App.deleteEvent('${ev.id}', event)">🗑️</button>
+        <button class="btn-sm" onclick="App.editEvent('${ev.id}',event)" title="Editar">✏️</button>
+        <button class="btn-sm" onclick="App.deleteEvent('${ev.id}',event)" title="Excluir">🗑️</button>
       </div>
     </div>`;
   },
 
-  _escape(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+  _esc(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
   },
 
   // ── EVENTS ──
   openEventModal() {
     State.editEvId = null;
-    State.evType = 'evento';
-    State.evColor = Config.COLORS[0];
+    State.evType   = 'evento';
+    State.evColor  = COLORS[0];
     document.getElementById('eventModalTitle').textContent = 'Novo Compromisso';
-    document.getElementById('evTitle').value = '';
-    document.getElementById('evDate').value = State.selDate || Utils.todayStr();
-    document.getElementById('evStart').value = '';
-    document.getElementById('evEnd').value = '';
-    document.getElementById('evNotes').value = '';
+    document.getElementById('evTitle').value  = '';
+    document.getElementById('evDate').value   = State.selDate || Utils.todayStr();
+    document.getElementById('evStart').value  = '';
+    document.getElementById('evEnd').value    = '';
+    document.getElementById('evNotes').value  = '';
     document.getElementById('evDeleteBtn').style.display = 'none';
-    this._selectColorPicker('evColorPicker', Config.COLORS[0]);
-    this._selectEventType('evento');
+    this._hideValidation('evTitleErr','evDateErr');
+    this._pickColor('evColorPicker', COLORS[0]);
+    this._selectTypeBtns('evento');
     this.openModal('eventModal');
   },
 
@@ -782,65 +1126,61 @@ const App = {
     if (evt) evt.stopPropagation();
     const ev = State.events.find(e => e.id === id);
     if (!ev) return;
-
     State.editEvId = id;
-    State.evType = ev.type;
-    State.evColor = ev.color;
-
+    State.evType   = ev.type;
+    State.evColor  = ev.color;
     document.getElementById('eventModalTitle').textContent = 'Editar Compromisso';
-    document.getElementById('evTitle').value = ev.title;
-    document.getElementById('evDate').value = ev.date;
-    document.getElementById('evStart').value = ev.start || '';
-    document.getElementById('evEnd').value = ev.end || '';
-    document.getElementById('evNotes').value = ev.notes || '';
+    document.getElementById('evTitle').value  = ev.title;
+    document.getElementById('evDate').value   = ev.date;
+    document.getElementById('evStart').value  = ev.start || '';
+    document.getElementById('evEnd').value    = ev.end   || '';
+    document.getElementById('evNotes').value  = ev.notes || '';
     document.getElementById('evDeleteBtn').style.display = 'block';
-    this._selectColorPicker('evColorPicker', ev.color);
-    this._selectEventType(ev.type);
+    this._hideValidation('evTitleErr','evDateErr');
+    this._pickColor('evColorPicker', ev.color);
+    this._selectTypeBtns(ev.type);
     this.openModal('eventModal');
   },
 
   saveEvent() {
     const title = document.getElementById('evTitle').value.trim();
-    if (!title) {
-      Utils.showToast('Título é obrigatório');
-      return;
-    }
+    const date  = document.getElementById('evDate').value;
+    let valid   = true;
 
-    const date = document.getElementById('evDate').value;
-    if (!date) {
-      Utils.showToast('Data é obrigatória');
-      return;
-    }
+    if (!title) { this._showValidation('evTitleErr'); valid = false; }
+    else { this._hideValidation('evTitleErr'); }
+    if (!date) { this._showValidation('evDateErr'); valid = false; }
+    else { this._hideValidation('evDateErr'); }
+    if (!valid) return;
 
-    const event = {
-      id: State.editEvId || Date.now().toString(),
-      title,
-      date,
-      type: State.evType,
+    const ev = {
+      id:    State.editEvId || Date.now().toString(),
+      title, date,
+      type:  State.evType,
       color: State.evColor,
       start: document.getElementById('evStart').value || '',
-      end: document.getElementById('evEnd').value || '',
+      end:   document.getElementById('evEnd').value   || '',
       notes: document.getElementById('evNotes').value.trim()
     };
 
     if (State.editEvId) {
       const idx = State.events.findIndex(e => e.id === State.editEvId);
-      if (idx >= 0) State.events[idx] = event;
+      if (idx >= 0) State.events[idx] = ev;
     } else {
-      State.events.push(event);
+      State.events.push(ev);
     }
 
     Storage.save();
     Calendar.render();
     this.renderDayPanel();
+    this._renderLegend();
+    this._renderStats();
     this.closeModal('eventModal');
-    Utils.showToast(State.editEvId ? 'Compromisso atualizado' : 'Compromisso criado');
+    Utils.toast(State.editEvId ? '✅ Compromisso atualizado' : '✅ Compromisso criado');
   },
 
   confirmDeleteEvent() {
-    if (confirm('Tem certeza que deseja excluir este compromisso?')) {
-      this.deleteEvent(State.editEvId);
-    }
+    if (confirm('Excluir este compromisso?')) this.deleteEvent(State.editEvId);
   },
 
   deleteEvent(id, evt) {
@@ -849,8 +1189,10 @@ const App = {
     Storage.save();
     Calendar.render();
     this.renderDayPanel();
+    this._renderLegend();
+    this._renderStats();
     this.closeModal('eventModal');
-    Utils.showToast('Compromisso excluído');
+    Utils.toast('🗑️ Compromisso excluído');
   },
 
   setEventType(btn) {
@@ -859,23 +1201,36 @@ const App = {
     State.evType = btn.dataset.type;
   },
 
-  _selectEventType(type) {
-    document.querySelectorAll('.type-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.type === type);
-    });
+  _selectTypeBtns(type) {
+    document.querySelectorAll('.type-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.type === type));
   },
 
   // ── FAB ──
   toggleFab() {
-    State.fabOpen = !State.fabOpen;
-    document.getElementById('fabWork').classList.toggle('vis', State.fabOpen);
-    document.getElementById('fabEvent').classList.toggle('vis', State.fabOpen);
+    State.fabOpen ? this.closeFab() : this.openFab();
+  },
+  openFab() {
+    State.fabOpen = true;
+    document.getElementById('fabWork').classList.add('vis');
+    document.getElementById('fabEvent').classList.add('vis');
+    document.getElementById('mainFab').classList.add('open');
+  },
+  closeFab() {
+    State.fabOpen = false;
+    document.getElementById('fabWork').classList.remove('vis');
+    document.getElementById('fabEvent').classList.remove('vis');
+    document.getElementById('mainFab').classList.remove('open');
   },
 
   quickAddWork() {
-    State.selDate = Utils.todayStr();
-    Calendar.render();
-    this.renderDayPanel();
+    this.closeFab();
+    // Use already selected date if available, else today
+    if (!State.selDate) {
+      State.selDate = Utils.todayStr();
+      Calendar.render();
+      this.renderDayPanel();
+    }
     this.openEventModal();
     document.querySelector('[data-type="trabalho"]').click();
   },
@@ -883,60 +1238,71 @@ const App = {
   // ── SCALES ──
   _renderScales() {
     const container = document.getElementById('scaleCards');
-    container.innerHTML = State.scales.map(sc => `
-      <div class="scale-card" onclick="App.editScale('${sc.id}', event)">
+    if (State.scales.length === 0) {
+      container.innerHTML = `<div class="empty-scales">
+        <div style="font-size:28px">🔄</div>
+        <p>Nenhuma escala criada ainda.</p>
+      </div>`;
+      return;
+    }
+
+    container.innerHTML = State.scales.map(sc => {
+      const days = [0,1,2,3,4,5,6].map(d => {
+        const on = sc.repeat === 'weekly' && sc.days.includes(d);
+        return `<div class="sdot${on ? ' on' : ''}" style="${on ? 'background:' + sc.color : ''}">${WD_SHORT[d]}</div>`;
+      }).join('');
+
+      const repeatLabel = { weekly:'Semanal', biweekly:'Quinzenal', custom:'Datas específicas' }[sc.repeat] || '';
+
+      return `<div class="scale-card" onclick="App.editScaleById('${sc.id}',event)">
         <div class="scale-accent" style="background:${sc.color}"></div>
         <div class="scale-info">
-          <div class="scale-name">${this._escape(sc.name)}</div>
-          <div class="scale-detail">${sc.start}${sc.end ? ' - ' + sc.end : ''}</div>
-          <div class="scale-days-row">
-            ${[0,1,2,3,4,5,6].map(d => {
-              const isActive = sc.repeat === 'weekly' && sc.days.includes(d);
-              return `<div class="sdot ${isActive ? 'on' : ''}" style="background:${isActive ? sc.color : ''};">${Config.WEEKDAYS[d][0]}</div>`;
-            }).join('')}
-          </div>
+          <div class="scale-name">${this._esc(sc.name)}</div>
+          <div class="scale-detail">${sc.start || '—'}${sc.end ? ' – ' + sc.end : ''} · ${repeatLabel}</div>
+          <div class="scale-dots">${days}</div>
         </div>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
   },
 
   openScaleModal() {
     State.editScId = null;
-    State.scColor = Config.COLORS[0];
-    State.scDays = [];
-    document.getElementById('scName').value = '';
-    document.getElementById('scStart').value = '';
-    document.getElementById('scEnd').value = '';
-    document.getElementById('scRepeat').value = 'weekly';
-    document.getElementById('scStartDate').value = '';
-    document.getElementById('scCustomDates').value = '';
+    State.scColor  = COLORS[0];
+    State.scDays   = [];
+    document.getElementById('scaleModalTitle').textContent = 'Nova Escala';
+    document.getElementById('scName').value       = '';
+    document.getElementById('scStart').value      = '';
+    document.getElementById('scEnd').value        = '';
+    document.getElementById('scRepeat').value     = 'weekly';
+    document.getElementById('scStartDate').value  = '';
+    document.getElementById('scCustomDates').value= '';
     document.querySelectorAll('.dtog').forEach(b => b.classList.remove('on'));
-    document.getElementById('scDaysGroup').style.display = 'block';
-    document.getElementById('scCustomGroup').style.display = 'none';
-    document.getElementById('scStartDateGroup').style.display = 'none';
-    document.getElementById('scBiweeklyInfo').style.display = 'none';
-    document.getElementById('scDeleteBtn').style.display = 'none';
-    this._selectColorPicker('scColorPicker', Config.COLORS[0]);
+    this._hideValidation('scNameErr','scStartDateErr','scCustomErr');
+    document.getElementById('scDaysGroup').style.display     = 'block';
+    document.getElementById('scCustomGroup').style.display   = 'none';
+    document.getElementById('scStartDateGroup').style.display= 'none';
+    document.getElementById('scDeleteBtn').style.display     = 'none';
+    this._pickColor('scColorPicker', COLORS[0]);
     this.openModal('scaleModal');
   },
 
-  editScale(id, evt) {
+  editScaleById(id, evt) {
     if (evt) evt.stopPropagation();
     const sc = State.scales.find(s => s.id === id);
     if (!sc) return;
-
     State.editScId = id;
-    State.scColor = sc.color;
-    State.scDays = [...(sc.days || [])];
-
-    document.getElementById('scName').value = sc.name;
-    document.getElementById('scStart').value = sc.start;
-    document.getElementById('scEnd').value = sc.end || '';
-    document.getElementById('scRepeat').value = sc.repeat;
-    document.getElementById('scStartDate').value = sc.startDate || '';
-    document.getElementById('scCustomDates').value = (sc.customDates || []).join(', ');
+    State.scColor  = sc.color;
+    State.scDays   = [...(sc.days || [])];
+    document.getElementById('scaleModalTitle').textContent = 'Editar Escala';
+    document.getElementById('scName').value        = sc.name;
+    document.getElementById('scStart').value       = sc.start || '';
+    document.getElementById('scEnd').value         = sc.end   || '';
+    document.getElementById('scRepeat').value      = sc.repeat;
+    document.getElementById('scStartDate').value   = sc.startDate || '';
+    document.getElementById('scCustomDates').value = (sc.customDates || []).join('\n');
     document.getElementById('scDeleteBtn').style.display = 'block';
-    this._selectColorPicker('scColorPicker', sc.color);
+    this._hideValidation('scNameErr','scStartDateErr','scCustomErr');
+    this._pickColor('scColorPicker', sc.color);
     this.onRepeatChange();
     document.querySelectorAll('.dtog').forEach(b => {
       b.classList.toggle('on', State.scDays.includes(Number(b.dataset.d)));
@@ -945,26 +1311,45 @@ const App = {
   },
 
   saveScale() {
-    const name = document.getElementById('scName').value.trim();
-    if (!name) {
-      Utils.showToast('Nome da escala é obrigatório');
-      return;
+    const name   = document.getElementById('scName').value.trim();
+    const repeat = document.getElementById('scRepeat').value;
+    let valid    = true;
+
+    if (!name) { this._showValidation('scNameErr'); valid = false; }
+    else { this._hideValidation('scNameErr'); }
+
+    if (repeat === 'biweekly' && !document.getElementById('scStartDate').value) {
+      this._showValidation('scStartDateErr'); valid = false;
+    } else { this._hideValidation('scStartDateErr'); }
+
+    // Validate custom dates format
+    let customDates = [];
+    if (repeat === 'custom') {
+      const raw = document.getElementById('scCustomDates').value;
+      const tokens = raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+      const invalid = tokens.filter(t => !Utils.isValidDate(t));
+      if (invalid.length > 0) {
+        const errEl = document.getElementById('scCustomErr');
+        errEl.textContent = `Formato inválido: ${invalid.slice(0,3).join(', ')}`;
+        this._showValidation('scCustomErr');
+        valid = false;
+      } else {
+        this._hideValidation('scCustomErr');
+        customDates = tokens;
+      }
     }
 
-    const repeat = document.getElementById('scRepeat').value;
-    const customDates = repeat === 'custom' 
-      ? document.getElementById('scCustomDates').value.split(/,|\n/).map(d => d.trim()).filter(d => d)
-      : [];
+    if (!valid) return;
 
     const scale = {
-      id: State.editScId || Date.now().toString(),
+      id:          State.editScId || Date.now().toString(),
       name,
-      start: document.getElementById('scStart').value || '',
-      end: document.getElementById('scEnd').value || '',
-      color: State.scColor,
+      start:       document.getElementById('scStart').value || '',
+      end:         document.getElementById('scEnd').value   || '',
+      color:       State.scColor,
       repeat,
-      days: State.scDays,
-      startDate: repeat === 'biweekly' ? document.getElementById('scStartDate').value : '',
+      days:        State.scDays,
+      startDate:   repeat === 'biweekly' ? document.getElementById('scStartDate').value : '',
       customDates
     };
 
@@ -978,27 +1363,32 @@ const App = {
     Storage.save();
     Calendar.render();
     this._renderScales();
+    this._renderLegend();
+    this._renderStats();
+    this.renderDayPanel();
     this.closeModal('scaleModal');
-    Utils.showToast(State.editScId ? 'Escala atualizada' : 'Escala criada');
+    Utils.toast(State.editScId ? '✅ Escala atualizada' : '✅ Escala criada');
   },
 
   confirmDeleteScale() {
-    if (confirm('Tem certeza que deseja excluir esta escala?')) {
+    if (confirm('Excluir esta escala?')) {
       State.scales = State.scales.filter(s => s.id !== State.editScId);
       Storage.save();
       Calendar.render();
       this._renderScales();
+      this._renderLegend();
+      this._renderStats();
+      this.renderDayPanel();
       this.closeModal('scaleModal');
-      Utils.showToast('Escala excluída');
+      Utils.toast('🗑️ Escala excluída');
     }
   },
 
   onRepeatChange() {
     const repeat = document.getElementById('scRepeat').value;
-    document.getElementById('scDaysGroup').style.display = repeat === 'custom' ? 'none' : 'block';
-    document.getElementById('scCustomGroup').style.display = repeat === 'custom' ? 'block' : 'none';
-    document.getElementById('scStartDateGroup').style.display = repeat === 'biweekly' ? 'block' : 'none';
-    document.getElementById('scBiweeklyInfo').style.display = repeat === 'biweekly' ? 'block' : 'none';
+    document.getElementById('scDaysGroup').style.display     = repeat === 'custom'    ? 'none'  : 'block';
+    document.getElementById('scCustomGroup').style.display   = repeat === 'custom'    ? 'block' : 'none';
+    document.getElementById('scStartDateGroup').style.display= repeat === 'biweekly'  ? 'block' : 'none';
   },
 
   toggleDay(btn) {
@@ -1011,78 +1401,186 @@ const App = {
     }
   },
 
+  // ── LEGEND ──
+  _renderLegend() {
+    const el = document.getElementById('legend');
+    const items = State.scales.map(sc =>
+      `<div class="legend-item">
+        <div class="legend-dot" style="background:${sc.color}"></div>
+        ${this._esc(sc.name)}
+      </div>`
+    );
+    el.innerHTML = items.join('');
+  },
+
   // ── STATS ──
   _renderStats() {
-    const daysInMonth = new Date(State.year, State.month + 1, 0).getDate();
-    const workDays = State.scales.reduce((acc, sc) => acc + (sc.repeat === 'weekly' ? sc.days.length : 0), 0);
-    const events = State.events.filter(e => Utils.parseDate(e.date).getMonth() === State.month).length;
-    const free = Math.max(0, Math.round(daysInMonth - (workDays || daysInMonth / 2)));
+    const y = State.year, m = State.month;
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
 
-    document.getElementById('statWork').textContent = workDays || 0;
+    // Count actual work days this month based on scales
+    let workDaysSet = new Set();
+    for (let d = 1; d <= daysInMonth; d++) {
+      const ds = Utils.dateStr(y, m, d);
+      if (Calendar.scalesForDate(ds).length > 0) workDaysSet.add(ds);
+    }
+    const workDays = workDaysSet.size;
+
+    // Events in this month
+    const events = State.events.filter(e => {
+      const ed = Utils.parseLocal(e.date);
+      return ed.getFullYear() === y && ed.getMonth() === m;
+    }).length;
+
+    // Free days = days with no scales and no events
+    let freeDays = 0;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const ds = Utils.dateStr(y, m, d);
+      const hasScale = Calendar.scalesForDate(ds).length > 0;
+      const hasEv    = State.events.some(e => e.date === ds);
+      if (!hasScale && !hasEv) freeDays++;
+    }
+
+    // Estimated hours from scales with defined start/end
+    let totalMins = 0;
+    State.scales.forEach(sc => {
+      if (!sc.start || !sc.end) return;
+      const [sh, sm] = sc.start.split(':').map(Number);
+      const [eh, em] = sc.end.split(':').map(Number);
+      const mins = (eh * 60 + em) - (sh * 60 + sm);
+      if (mins <= 0) return;
+      // Count how many days this scale fires in this month
+      let count = 0;
+      for (let d = 1; d <= daysInMonth; d++) {
+        const ds = Utils.dateStr(y, m, d);
+        if (Calendar.scalesForDate(ds).some(s => s.id === sc.id)) count++;
+      }
+      totalMins += mins * count;
+    });
+    const hours = totalMins > 0 ? Math.round(totalMins / 60) : null;
+
+    document.getElementById('statWork').textContent   = workDays;
     document.getElementById('statEvents').textContent = events;
-    document.getElementById('statFree').textContent = free;
+    document.getElementById('statFree').textContent   = freeDays;
+    document.getElementById('statHours').textContent  = hours !== null ? `${hours}h` : '—';
+    document.getElementById('resumoTitle').textContent=
+      `${MONTHS[m]} ${y}`;
   },
 
   // ── SHEETS ──
   openSheetsModal() {
-    document.getElementById('shUrl').value = State.sheets.url;
+    document.getElementById('shUrl').value    = State.sheets.url;
     document.getElementById('shScript').value = State.sheets.script;
-    document.getElementById('shTab').value = State.sheets.tab;
+    document.getElementById('shTab').value    = State.sheets.tab || 'Agenda';
     this.openModal('sheetsModal');
   },
 
   saveSheets() {
-    State.sheets.url = document.getElementById('shUrl').value.trim();
+    State.sheets.url    = document.getElementById('shUrl').value.trim();
     State.sheets.script = document.getElementById('shScript').value.trim();
-    State.sheets.tab = document.getElementById('shTab').value.trim();
+    State.sheets.tab    = document.getElementById('shTab').value.trim() || 'Agenda';
     Storage.save();
-    Utils.showToast('Configuração salva');
+    this._updateSheetsStatus();
+    Utils.toast('✅ Configuração salva');
   },
 
-  testSheets() {
-    Utils.showToast('Teste de conexão (em desenvolvimento)');
+  async testSheets() {
+    const url = document.getElementById('shUrl').value.trim();
+    if (!url) { Utils.toast('Cole a URL da planilha primeiro'); return; }
+
+    const btn = document.getElementById('testSheetsBtn');
+    btn.textContent = '⏳ Testando...';
+    btn.disabled    = true;
+
+    const dot = document.getElementById('statusDot');
+    dot.classList.add('syncing');
+
+    try {
+      const res = await fetch(url, { mode: 'cors' });
+      if (res.ok) {
+        State.sheets.connected = true;
+        State.sheets.lastSync  = new Date().toISOString();
+        Storage.save();
+        this._updateSheetsStatus();
+        Utils.toast('✅ Conexão bem-sucedida!');
+      } else {
+        throw new Error(`HTTP ${res.status}`);
+      }
+    } catch(e) {
+      State.sheets.connected = false;
+      dot.classList.remove('syncing');
+      this._updateSheetsStatus();
+      Utils.toast(`❌ Falha na conexão: ${e.message}`);
+    } finally {
+      btn.textContent = '🔍 Testar conexão';
+      btn.disabled    = false;
+    }
   },
 
-  // ── MODAL ──
-  openModal(id) {
-    document.getElementById(id).classList.add('open');
+  _updateSheetsStatus() {
+    const dot  = document.getElementById('statusDot');
+    const name = document.getElementById('statusText');
+    const sub  = document.getElementById('syncInfo');
+    dot.className = 'sync-dot';
+
+    if (State.sheets.connected && State.sheets.url) {
+      dot.classList.add('on');
+      name.textContent = 'Google Sheets conectado';
+      sub.textContent  = State.sheets.lastSync
+        ? `Última sync: ${new Date(State.sheets.lastSync).toLocaleString('pt-BR')}`
+        : 'Conectado';
+    } else if (State.sheets.url) {
+      name.textContent = 'Planilha configurada';
+      sub.textContent  = 'Teste a conexão para confirmar';
+    } else {
+      name.textContent = 'Google Sheets desconectado';
+      sub.textContent  = 'Configure para sincronizar dados';
+    }
   },
 
-  closeModal(id) {
-    document.getElementById(id).classList.remove('open');
-  },
-
-  closeOnBg(evt, modalId) {
-    if (evt.target.id === modalId) this.closeModal(modalId);
+  // ── MODAL HELPERS ──
+  openModal(id)  { document.getElementById(id).classList.add('open'); },
+  closeModal(id) { document.getElementById(id).classList.remove('open'); },
+  closeOnBg(evt, id) {
+    if (evt.target.id === id) this.closeModal(id);
   },
 
   // ── COLOR PICKER ──
-  _renderColorPickers() {
-    ['evColorPicker', 'scColorPicker'].forEach(id => {
-      document.getElementById(id).innerHTML = Config.COLORS.map(color => 
-        `<div class="clr-opt" style="background:${color}" onclick="App._selectColor('${id}', '${color}')"></div>`
+  _buildColorPickers() {
+    ['evColorPicker','scColorPicker'].forEach(pid => {
+      document.getElementById(pid).innerHTML = COLORS.map(c =>
+        `<div class="clr-opt" style="background:${c}" onclick="App._selectColor('${pid}','${c}')"></div>`
       ).join('');
     });
   },
 
-  _selectColor(pickerId, color) {
-    if (pickerId === 'evColorPicker') State.evColor = color;
-    else if (pickerId === 'scColorPicker') State.scColor = color;
-    this._selectColorPicker(pickerId, color);
+  _selectColor(pid, color) {
+    if (pid === 'evColorPicker') State.evColor = color;
+    else State.scColor = color;
+    this._pickColor(pid, color);
   },
 
-  _selectColorPicker(pickerId, color) {
-    document.querySelectorAll(`#${pickerId} .clr-opt`).forEach(btn => {
-      btn.classList.toggle('sel', btn.style.background === color);
-    });
-  }
+  _pickColor(pid, color) {
+    document.querySelectorAll(`#${pid} .clr-opt`).forEach(el =>
+      el.classList.toggle('sel', el.style.background === color)
+    );
+  },
+
+  // ── VALIDATION HELPERS ──
+  _showValidation(...ids) { ids.forEach(id => { const el=document.getElementById(id); if(el) el.classList.add('show'); }); },
+  _hideValidation(...ids) { ids.forEach(id => { const el=document.getElementById(id); if(el) el.classList.remove('show'); }); },
 };
 
-// ============================================
-// INITIALIZATION
-// ============================================
-window.addEventListener('DOMContentLoaded', () => App.init());
-</script>
+// ── CLOSE FAB ON OUTSIDE TAP ──
+document.addEventListener('click', e => {
+  if (State.fabOpen &&
+      !e.target.closest('.fab-wrap')) {
+    App.closeFab();
+  }
+});
 
+// ── BOOT ──
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
 </body>
 </html>

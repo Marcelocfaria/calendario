@@ -953,14 +953,17 @@ function getScalesForDate(ds) {
       return sc.days.includes(dow);
     }
     if (sc.repeat === 'biweekly') {
-      if (!sc.days.includes(dow)) return false;
-      if (!sc.startDate) return false;
-      const start = parseDate(sc.startDate);
-      const diffDays = Math.floor((date - start) / 86400000);
-      if (diffDays < 0) return false;
-      const weekNum = Math.floor(diffDays / 7);
-      return weekNum % 2 === 0;
-    }
+  if (!sc.days.includes(dow)) return false;
+  if (!sc.startDate) return false;
+
+  const start = parseDate(sc.startDate);
+  const diffDays = diffInDays(date, start);
+
+  if (diffDays < 0) return false;
+
+  const weekNum = Math.floor(diffDays / 7);
+  return weekNum % 2 === 0;
+}
     if (sc.repeat === 'custom') {
       return (sc.customDates || []).includes(ds);
     }
@@ -1417,7 +1420,7 @@ async function syncToSheets(payload) {
   try {
     await fetch(S.sheets.script, {
       method: 'POST',
-      mode: 'no-cors',
+      mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });

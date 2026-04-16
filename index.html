@@ -739,7 +739,6 @@ pre{
       </select>
     </div>
 
-    <!-- FIX 3: scStartDate agora é preenchido por editScale() -->
     <div class="form-group" id="scStartDateGroup" style="display:none">
       <label class="form-label">Data de início do ciclo</label>
       <input type="date" class="form-input" id="scStartDate">
@@ -1079,6 +1078,8 @@ function saveEvent() {
   if (!title) { toast('Informe o título!'); return; }
   if (!date)  { toast('Informe a data!'); return; }
 
+  const isEditing = !!S.editEvId;
+
   const ev = {
     id: S.editEvId || uid(),
     title, date,
@@ -1089,28 +1090,47 @@ function saveEvent() {
     color: S.evColor
   };
 
-  if (S.editEvId) {
-    S.events = S.events.map(e => e.id===S.editEvId ? ev : e);
+  if (isEditing) {
+    S.events = S.events.map(e => e.id === S.editEvId ? ev : e);
     toast('Compromisso atualizado!');
   } else {
     S.events.push(ev);
     toast('Compromisso salvo!');
   }
 
-  save(); closeModal('eventModal');
-  renderCalendar(); renderDayPanel(); renderStats();
-  if (S.sheets.script) syncToSheets(ev);
+  save();
+  closeModal('eventModal');
+  renderCalendar();
+  renderDayPanel();
+  renderStats();
+
+  // ✅ CORRIGIDO: envia action + record_type corretos
+  if (S.sheets.script) {
+    syncToSheets({
+      ...ev,
+      action: isEditing ? 'update' : 'create',
+      record_type: 'event'
+    });
+  }
 }
 
 function confirmDeleteEvent() {
   if (!confirm('Excluir este compromisso?')) return;
-  deleteEvent(S.editEvId);
+  const id = S.editEvId;
   closeModal('eventModal');
+  deleteEvent(id);
 }
 
 function deleteEvent(id) {
-  S.events = S.events.filter(e=>e.id!==id);
-  save(); renderCalendar(); renderDayPanel(); renderStats();
+  // ✅ CORRIGIDO: sincroniza deleção de evento antes de remover do estado
+  if (S.sheets.script) {
+    syncToSheets({ id, action: 'delete', record_type: 'event' });
+  }
+  S.events = S.events.filter(e => e.id !== id);
+  save();
+  renderCalendar();
+  renderDayPanel();
+  renderStats();
   toast('Compromisso removido!');
 }
 
@@ -1129,7 +1149,6 @@ function openScaleModal() {
   document.getElementById('scDeleteBtn').style.display = 'none';
   document.querySelectorAll('.dtog').forEach(b=>b.classList.remove('on'));
   renderColorPicker('scColorPicker','scColor');
-  // FIX 4: chamar onRepeatChange() para sincronizar visibilidade dos grupos
   onRepeatChange();
   openModal('scaleModal');
 }
@@ -1146,7 +1165,6 @@ function editScale(id) {
   document.getElementById('scEnd').value = sc.end||'';
   document.getElementById('scRepeat').value = sc.repeat;
   document.getElementById('scCustomDates').value = (sc.customDates||[]).join(', ');
-  // FIX 3: preencher o campo de data de início ao editar escala quinzenal
   document.getElementById('scStartDate').value = sc.startDate||'';
   document.getElementById('scDeleteBtn').style.display = 'block';
   document.querySelectorAll('.dtog').forEach(b=>{
@@ -1159,9 +1177,9 @@ function editScale(id) {
 
 function onRepeatChange() {
   const v = document.getElementById('scRepeat').value;
-  document.getElementById('scDaysGroup').style.display    = v==='custom'    ? 'none'  : 'block';
-  document.getElementById('scCustomGroup').style.display  = v==='custom'    ? 'block' : 'none';
-  document.getElementById('scBiweeklyInfo').style.display = v==='biweekly'  ? 'block' : 'none';
+  document.getElementById('scDaysGroup').style.display    = v==='custom'   ? 'none'  : 'block';
+  document.getElementById('scCustomGroup').style.display  = v==='custom'   ? 'block' : 'none';
+  document.getElementById('scBiweeklyInfo').style.display = v==='biweekly' ? 'block' : 'none';
   document.getElementById('scStartDateGroup').style.display = v==='biweekly' ? 'block' : 'none';
 }
 
@@ -1182,7 +1200,6 @@ function saveScale() {
     toast('Selecione pelo menos um dia!'); return;
   }
 
-  // FIX 6: validar que data de início foi informada para escala quinzenal
   if (repeat === 'biweekly' && !document.getElementById('scStartDate').value) {
     toast('Informe a data de início do ciclo quinzenal!'); return;
   }
@@ -1193,6 +1210,8 @@ function saveScale() {
     customDates = raw.split(/[\n,]/).map(d=>d.trim()).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d));
     if (customDates.length === 0) { toast('Informe pelo menos uma data válida (AAAA-MM-DD)!'); return; }
   }
+
+  const isEditing = !!S.editScId;
 
   const sc = {
     id: S.editScId || uid(),
@@ -1206,34 +1225,67 @@ function saveScale() {
     startDate: document.getElementById('scStartDate').value
   };
 
-  if (S.editScId) {
-    S.scales = S.scales.map(s=>s.id===S.editScId?sc:s);
+  if (isEditing) {
+    S.scales = S.scales.map(s => s.id === S.editScId ? sc : s);
     toast('Escala atualizada!');
   } else {
     S.scales.push(sc);
     toast('Escala criada!');
   }
 
-  save(); closeModal('scaleModal');
-  renderCalendar(); renderDayPanel();
-  renderScaleCards(); renderLegend(); renderStats();
-  if (S.sheets.script) syncToSheets(sc, 'scale');
+  save();
+  closeModal('scaleModal');
+  renderCalendar();
+  renderDayPanel();
+  renderScaleCards();
+  renderLegend();
+  renderStats();
+
+  // ✅ CORRIGIDO: envia action + record_type corretos para escalas
+  if (S.sheets.script) {
+    syncToSheets({
+      ...sc,
+      action: isEditing ? 'update' : 'create',
+      record_type: 'scale'
+    });
+  }
 }
 
 function confirmDeleteScale() {
   if (!confirm('Excluir esta escala? Os dias de trabalho sumirão do calendário.')) return;
-  S.scales = S.scales.filter(s=>s.id!==S.editScId);
-  save(); closeModal('scaleModal');
-  renderCalendar(); renderDayPanel();
-  renderScaleCards(); renderLegend(); renderStats();
+  const id = S.editScId;
+  closeModal('scaleModal');
+
+  // ✅ CORRIGIDO: sincroniza deleção de escala
+  if (S.sheets.script) {
+    syncToSheets({ id, action: 'delete', record_type: 'scale' });
+  }
+
+  S.scales = S.scales.filter(s => s.id !== id);
+  save();
+  renderCalendar();
+  renderDayPanel();
+  renderScaleCards();
+  renderLegend();
+  renderStats();
   toast('Escala removida!');
 }
 
 function deleteScale(id) {
   if (!confirm('Excluir esta escala?')) return;
-  S.scales = S.scales.filter(s=>s.id!==id);
-  save(); renderCalendar(); renderDayPanel();
-  renderScaleCards(); renderLegend(); renderStats();
+
+  // ✅ CORRIGIDO: sincroniza deleção de escala (botão direto no card)
+  if (S.sheets.script) {
+    syncToSheets({ id, action: 'delete', record_type: 'scale' });
+  }
+
+  S.scales = S.scales.filter(s => s.id !== id);
+  save();
+  renderCalendar();
+  renderDayPanel();
+  renderScaleCards();
+  renderLegend();
+  renderStats();
   toast('Escala removida!');
 }
 
@@ -1277,9 +1329,7 @@ function renderLegend() {
   ).join('');
 }
 
-/* ── STATS ──
-   FIX 5: calcular horas por escala individualmente, contando só
-   os dias do mês em que cada escala específica aparece. */
+/* ── STATS ── */
 function renderStats() {
   const dim = new Date(S.year, S.month+1, 0).getDate();
   let workSet = new Set();
@@ -1292,7 +1342,6 @@ function renderStats() {
   const monthPfx = `${S.year}-${String(S.month+1).padStart(2,'0')}`;
   const evs = S.events.filter(e=>e.date&&e.date.startsWith(monthPfx));
 
-  // Conta horas somando por cada dia de cada escala, não pelo total agregado
   let totalMins = 0;
   S.scales.forEach(sc => {
     if (!sc.start || !sc.end) return;
@@ -1329,13 +1378,14 @@ function saveSheets() {
   S.sheets.script = document.getElementById('shScript').value.trim();
   S.sheets.tab = document.getElementById('shTab').value.trim()||'Agenda';
   S.sheets.connected = !!(S.sheets.url||S.sheets.script);
-  save(); updateSheetsStatus(); closeModal('sheetsModal');
+  save();
+  updateSheetsStatus();
+  closeModal('sheetsModal');
   toast(S.sheets.connected ? '✅ Planilha configurada!' : 'Configuração salva.');
 }
 
 let syncInterval = null;
 
-/* FIX 1: apenas UMA função testSheets (versão CSV correta) */
 async function testSheets() {
   const url = document.getElementById('shUrl').value.trim();
   if (!url) { toast('Informe a URL CSV!'); return; }
@@ -1361,11 +1411,10 @@ async function testSheets() {
   }
 }
 
-/* FIX 2: syncToSheets lê S.sheets.script (estado), não do DOM */
-async function syncToSheets(record, type) {
+// ✅ CORRIGIDO: syncToSheets agora recebe o objeto já montado com action e record_type
+async function syncToSheets(payload) {
   if (!S.sheets.script) return;
   try {
-    const payload = { ...record, record_type: type };
     await fetch(S.sheets.script, {
       method: 'POST',
       mode: 'no-cors',

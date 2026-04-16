@@ -1010,10 +1010,17 @@ function getScalesForDate(dateStr) {
     }
     if (sc.repeat === 'biweekly') {
       if (!sc.days.includes(dow)) return false;
-      // biweekly: check against a fixed reference epoch (2-week cycle from Jan 1 2024)
-      const epoch = new Date(2024, 0, 1); // Monday Jan 1 2024
-      const diffDays = Math.floor((date - epoch) / 86400000);
+    
+      // 🔥 NOVO
+      if (!sc.startDate) return false;
+    
+      const start = parseDate(sc.startDate);
+      const diffDays = Math.floor((date - start) / 86400000);
+    
+      if (diffDays < 0) return false;
+    
       const weekNum = Math.floor(diffDays / 7);
+    
       return weekNum % 2 === 0;
     }
     if (sc.repeat === 'custom') {
@@ -1259,7 +1266,10 @@ function saveScale() {
     color: S.scColor,
     days:  [...S.scDays],
     repeat,
-    customDates
+    customDates,
+  
+    // 🔥 NOVO
+    startDate: document.getElementById('scStartDate').value
   };
 
   if (S.editScId) {

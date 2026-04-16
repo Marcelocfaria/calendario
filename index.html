@@ -46,10 +46,8 @@ html,body{
   overscroll-behavior:none;
 }
 
-/* SCROLLBAR */
 ::-webkit-scrollbar{width:0;height:0;}
 
-/* ── HEADER ── */
 .app-header{
   background:var(--surface);
   border-bottom:0.5px solid var(--border);
@@ -128,7 +126,6 @@ html,body{
 }
 .nav-btn:active{background:var(--surface2);transform:scale(0.93);}
 
-/* ── WEEKDAYS ── */
 .weekdays{
   display:grid;grid-template-columns:repeat(7,1fr);
   padding:8px 8px 4px;gap:2px;
@@ -140,7 +137,6 @@ html,body{
 }
 .weekday.wknd{color:var(--accent2);}
 
-/* ── CALENDAR GRID ── */
 .cal-grid{
   display:grid;grid-template-columns:repeat(7,1fr);
   gap:2px;padding:4px 8px 12px;
@@ -185,16 +181,13 @@ html,body{
   border-radius:2px;
 }
 
-/* ── MAIN ── */
 .main{
   padding:14px 14px 110px;
 }
 
-/* ── TABS ── */
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 
-/* ── DAY PANEL ── */
 .day-panel{
   background:var(--surface);
   border-radius:var(--r);
@@ -236,7 +229,6 @@ html,body{
 }
 .empty-day-icon{font-size:26px;margin-bottom:8px;}
 
-/* ── EVENT ITEM ── */
 .ev-item{
   display:flex;align-items:stretch;gap:10px;
   padding:12px 0;
@@ -267,7 +259,6 @@ html,body{
 }
 .btn-sm:active{transform:scale(0.87);}
 
-/* ── SECTION ── */
 .section-title{
   font-family:'Fraunces',serif;
   font-size:16px;font-weight:600;
@@ -275,7 +266,6 @@ html,body{
   display:flex;align-items:center;gap:8px;
 }
 
-/* ── SCALE CARDS ── */
 .scale-card{
   background:var(--surface);
   border-radius:var(--r);
@@ -302,7 +292,6 @@ html,body{
 }
 .sdot.on{color:#fff;border-color:transparent;}
 
-/* ── STAT CARDS ── */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
 .stat-card{
   background:var(--surface);border-radius:var(--r);
@@ -314,7 +303,6 @@ html,body{
 }
 .stat-label{font-size:11px;color:var(--text2);margin-top:3px;}
 
-/* ── SHEETS PANEL ── */
 .sheets-panel{
   background:var(--surface);border-radius:var(--r);
   box-shadow:var(--sh);padding:16px;
@@ -330,7 +318,6 @@ html,body{
 .status-name{font-size:13px;font-weight:600;}
 .status-sub{font-size:11px;color:var(--text3);margin-top:1px;}
 
-/* ── BOTTOM TABS ── */
 .bottom-tabs{
   position:fixed;bottom:0;
   left:50%;transform:translateX(-50%);
@@ -351,9 +338,7 @@ html,body{
 .tab-icon{font-size:19px;line-height:1;}
 .tab-label{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:0.2px;}
 .tab-btn.active .tab-label{color:var(--accent);}
-.tab-btn.active .tab-icon{filter:none;}
 
-/* ── FAB ── */
 .fab-wrap{
   position:fixed;bottom:72px;right:16px;
   display:flex;flex-direction:column;align-items:flex-end;gap:8px;
@@ -383,7 +368,6 @@ html,body{
 .fab-mini.vis{opacity:1;transform:scale(1) translateY(0);pointer-events:all;}
 .fab-mini:active{transform:scale(0.92);}
 
-/* ── MODAL ── */
 .modal-overlay{
   position:fixed;inset:0;
   background:rgba(20,16,12,0.55);
@@ -414,7 +398,6 @@ html,body{
   font-size:19px;font-weight:700;margin-bottom:20px;
 }
 
-/* ── FORM ── */
 .form-group{margin-bottom:16px;}
 .form-label{
   font-size:11px;font-weight:700;
@@ -436,7 +419,6 @@ html,body{
 .form-input::placeholder{color:var(--text3);}
 .form-textarea{resize:none;min-height:80px;padding:13px 14px;}
 
-/* ── COLOR PICKER ── */
 .color-picker{display:flex;gap:8px;flex-wrap:wrap;}
 .clr-opt{
   width:34px;height:34px;border-radius:50%;
@@ -450,7 +432,6 @@ html,body{
   color:#fff;font-size:14px;font-weight:700;
 }
 
-/* ── TYPE SELECTOR ── */
 .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .type-btn{
   padding:11px 8px;
@@ -469,7 +450,6 @@ html,body{
   background:var(--accent-bg);color:var(--accent);
 }
 
-/* ── DAY TOGGLES ── */
 .days-row{display:flex;gap:6px;justify-content:space-between;}
 .dtog{
   flex:1;height:42px;
@@ -484,7 +464,6 @@ html,body{
 .dtog:active{transform:scale(0.90);}
 .dtog.on{background:var(--accent);border-color:var(--accent);color:#fff;}
 
-/* ── BUTTONS ── */
 .btn-primary{
   width:100%;padding:15px;
   background:var(--accent);color:#fff;border:none;
@@ -518,7 +497,6 @@ html,body{
 }
 .btn-danger:active{background:var(--red-bg);}
 
-/* ── TOAST ── */
 .toast{
   position:fixed;bottom:76px;
   left:50%;transform:translateX(-50%) translateY(12px);
@@ -532,7 +510,6 @@ html,body{
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* ── LEGEND ── */
 .legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
 .legend-item{
   display:flex;align-items:center;gap:5px;
@@ -542,7 +519,6 @@ html,body{
 }
 .legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
 
-/* ── SHEETS MODAL ── */
 .info-box{
   background:var(--accent-bg);border-radius:var(--r-sm);
   padding:14px;margin-bottom:18px;
@@ -557,11 +533,9 @@ pre{
   overflow-x:auto;
 }
 
-/* time row */
 .time-row{display:flex;gap:8px;}
 .time-row .form-input{flex:1;}
 
-/* divider label */
 .divider-label{
   font-size:11px;font-weight:700;color:var(--text3);
   text-transform:uppercase;letter-spacing:0.6px;
@@ -571,7 +545,6 @@ pre{
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="app-header">
   <div class="header-top">
     <span class="app-title">
@@ -599,7 +572,6 @@ pre{
   <div class="cal-grid" id="calGrid"></div>
 </div>
 
-<!-- BOTTOM TABS -->
 <div class="bottom-tabs">
   <button class="tab-btn active" onclick="switchTab('agenda')" id="tab-agenda">
     <span class="tab-icon">📋</span>
@@ -615,10 +587,8 @@ pre{
   </button>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
-  <!-- AGENDA TAB -->
   <div class="tab-content active" id="content-agenda">
     <div class="legend" id="legend"></div>
     <div class="day-panel" id="dayPanel">
@@ -638,14 +608,12 @@ pre{
     </div>
   </div>
 
-  <!-- ESCALAS TAB -->
   <div class="tab-content" id="content-escalas">
     <div class="section-title">⚙️ Escalas de Serviço</div>
     <div id="scaleCards"></div>
     <button class="btn-secondary" onclick="openScaleModal()">+ Nova Escala</button>
   </div>
 
-  <!-- RESUMO TAB -->
   <div class="tab-content" id="content-resumo">
     <div class="section-title">📊 Resumo do Mês</div>
     <div class="stats-grid">
@@ -680,14 +648,12 @@ pre{
 
 </div>
 
-<!-- FAB -->
 <div class="fab-wrap">
   <button class="fab-mini" id="fabWork" style="background:var(--accent)" onclick="quickAddWork()">🏢 Trabalho</button>
   <button class="fab-mini" id="fabEvent" style="background:var(--blue)" onclick="openEventModal()">📝 Evento</button>
   <button class="fab" id="mainFab" onclick="toggleFab()">+</button>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <!-- MODAL: EVENTO -->
@@ -772,8 +738,8 @@ pre{
         <option value="custom">Datas específicas</option>
       </select>
     </div>
-    
-    <!-- 🔥 NOVO BLOCO -->
+
+    <!-- FIX 3: scStartDate agora é preenchido por editScale() -->
     <div class="form-group" id="scStartDateGroup" style="display:none">
       <label class="form-label">Data de início do ciclo</label>
       <input type="date" class="form-input" id="scStartDate">
@@ -800,7 +766,7 @@ pre{
 
     <div class="form-group" id="scBiweeklyInfo" style="display:none">
       <div style="background:var(--amber-bg);border-radius:var(--r-sm);padding:12px;font-size:13px;color:var(--amber);border:0.5px solid rgba(176,96,16,0.2);">
-        ℹ️ A escala quinzenal começa na semana atual e alterna a cada 14 dias.
+        ℹ️ Informe a data de início do ciclo quinzenal acima.
       </div>
     </div>
 
@@ -864,9 +830,6 @@ pre{
 </div>
 
 <script>
-/* ============================
-   STATE
-   ============================ */
 const COLORS = [
   '#2D6A4F','#C05830','#2563A8','#6B4FA8',
   '#B06010','#C0282A','#1B8A5A','#1C4E80',
@@ -906,11 +869,6 @@ function save() {
   }));
 }
 
-/* ============================
-   DATE UTILS  ← bug fix here
-   ============================ */
-
-// Returns YYYY-MM-DD string for a given year/month(0-indexed)/day
 function dateStr(y, m, d) {
   return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
 }
@@ -920,15 +878,12 @@ function todayStr() {
   return dateStr(t.getFullYear(), t.getMonth(), t.getDate());
 }
 
-// Parse YYYY-MM-DD safely (avoids timezone shifts)
 function parseDate(str) {
   const [y,m,d] = str.split('-').map(Number);
   return new Date(y, m-1, d);
 }
 
-/* ============================
-   CALENDAR
-   ============================ */
+/* ── CALENDAR ── */
 function renderCalendar() {
   document.getElementById('monthLabel').textContent = `${MONTHS[S.month]} ${S.year}`;
   const grid = document.getElementById('calGrid');
@@ -944,14 +899,12 @@ function renderCalendar() {
     let cellDate, isOther = false;
 
     if (i < firstDow) {
-      // previous month
       const prevM = S.month === 0 ? 11 : S.month - 1;
       const prevY = S.month === 0 ? S.year - 1 : S.year;
       const d = daysInPrev - (firstDow - 1 - i);
       cellDate = dateStr(prevY, prevM, d);
       isOther = true;
     } else if (i >= firstDow + daysInMonth) {
-      // next month
       const nextM = S.month === 11 ? 0 : S.month + 1;
       const nextY = S.month === 11 ? S.year + 1 : S.year;
       const d = i - (firstDow + daysInMonth) + 1;
@@ -969,18 +922,12 @@ function renderCalendar() {
     const isSel = cellDate === S.selDate;
     const isWknd = dow === 0 || dow === 6;
 
-    // gather color pips
     const evs = S.events.filter(e => e.date === cellDate);
     const scales = getScalesForDate(cellDate);
 
     let pipHtml = '';
-    const allColors = [
-      ...scales.map(s => s.color),
-      ...evs.map(e => e.color)
-    ].slice(0, 4);
-    allColors.forEach(c => {
-      pipHtml += `<div class="pip" style="background:${c}"></div>`;
-    });
+    const allColors = [...scales.map(s => s.color), ...evs.map(e => e.color)].slice(0, 4);
+    allColors.forEach(c => { pipHtml += `<div class="pip" style="background:${c}"></div>`; });
 
     let cls = 'day-cell';
     if (isOther) cls += ' other';
@@ -997,11 +944,9 @@ function renderCalendar() {
   grid.innerHTML = html;
 }
 
-/* ============================
-   SCALES — core logic fixed
-   ============================ */
-function getScalesForDate(dateStr) {
-  const date = parseDate(dateStr);
+/* ── SCALES ── */
+function getScalesForDate(ds) {
+  const date = parseDate(ds);
   const dow = date.getDay();
 
   return S.scales.filter(sc => {
@@ -1010,29 +955,21 @@ function getScalesForDate(dateStr) {
     }
     if (sc.repeat === 'biweekly') {
       if (!sc.days.includes(dow)) return false;
-    
-      // 🔥 NOVO
       if (!sc.startDate) return false;
-    
       const start = parseDate(sc.startDate);
       const diffDays = Math.floor((date - start) / 86400000);
-    
       if (diffDays < 0) return false;
-    
       const weekNum = Math.floor(diffDays / 7);
-    
       return weekNum % 2 === 0;
     }
     if (sc.repeat === 'custom') {
-      return (sc.customDates || []).includes(dateStr);
+      return (sc.customDates || []).includes(ds);
     }
     return false;
   });
 }
 
-/* ============================
-   DAY PANEL
-   ============================ */
+/* ── DAY PANEL ── */
 function selectDate(d) {
   S.selDate = d;
   renderCalendar();
@@ -1074,7 +1011,6 @@ function renderDayPanel() {
   });
 
   evs.sort((a,b) => (a.start||'') < (b.start||'') ? -1 : 1).forEach(ev => {
-    const typeColors = {evento:'var(--blue)',trabalho:'var(--accent)',pessoal:'var(--purple)',lembrete:'var(--amber)'};
     html += `<div class="ev-item">
       <div class="ev-bar" style="background:${ev.color}"></div>
       <div class="ev-body">
@@ -1099,9 +1035,7 @@ function typeLabel(t) {
   return {evento:'Evento',trabalho:'Trabalho',pessoal:'Pessoal',lembrete:'Lembrete'}[t]||t;
 }
 
-/* ============================
-   EVENT CRUD
-   ============================ */
+/* ── EVENT CRUD ── */
 function openEventModal(date) {
   S.editEvId = null;
   S.evType = 'evento';
@@ -1180,9 +1114,7 @@ function deleteEvent(id) {
   toast('Compromisso removido!');
 }
 
-/* ============================
-   SCALE CRUD
-   ============================ */
+/* ── SCALE CRUD ── */
 function openScaleModal() {
   S.editScId = null;
   S.scColor = COLORS[0];
@@ -1193,12 +1125,12 @@ function openScaleModal() {
   document.getElementById('scEnd').value = '17:00';
   document.getElementById('scRepeat').value = 'weekly';
   document.getElementById('scCustomDates').value = '';
-  document.getElementById('scCustomGroup').style.display = 'none';
-  document.getElementById('scBiweeklyInfo').style.display = 'none';
-  document.getElementById('scDaysGroup').style.display = 'block';
+  document.getElementById('scStartDate').value = '';
   document.getElementById('scDeleteBtn').style.display = 'none';
   document.querySelectorAll('.dtog').forEach(b=>b.classList.remove('on'));
   renderColorPicker('scColorPicker','scColor');
+  // FIX 4: chamar onRepeatChange() para sincronizar visibilidade dos grupos
+  onRepeatChange();
   openModal('scaleModal');
 }
 
@@ -1214,6 +1146,8 @@ function editScale(id) {
   document.getElementById('scEnd').value = sc.end||'';
   document.getElementById('scRepeat').value = sc.repeat;
   document.getElementById('scCustomDates').value = (sc.customDates||[]).join(', ');
+  // FIX 3: preencher o campo de data de início ao editar escala quinzenal
+  document.getElementById('scStartDate').value = sc.startDate||'';
   document.getElementById('scDeleteBtn').style.display = 'block';
   document.querySelectorAll('.dtog').forEach(b=>{
     b.classList.toggle('on', sc.days.includes(parseInt(b.dataset.d)));
@@ -1225,12 +1159,9 @@ function editScale(id) {
 
 function onRepeatChange() {
   const v = document.getElementById('scRepeat').value;
-
-  document.getElementById('scDaysGroup').style.display   = v==='custom' ? 'none' : 'block';
-  document.getElementById('scCustomGroup').style.display = v==='custom' ? 'block' : 'none';
-  document.getElementById('scBiweeklyInfo').style.display = v==='biweekly' ? 'block' : 'none';
-
-  // 🔥 NOVO
+  document.getElementById('scDaysGroup').style.display    = v==='custom'    ? 'none'  : 'block';
+  document.getElementById('scCustomGroup').style.display  = v==='custom'    ? 'block' : 'none';
+  document.getElementById('scBiweeklyInfo').style.display = v==='biweekly'  ? 'block' : 'none';
   document.getElementById('scStartDateGroup').style.display = v==='biweekly' ? 'block' : 'none';
 }
 
@@ -1251,6 +1182,11 @@ function saveScale() {
     toast('Selecione pelo menos um dia!'); return;
   }
 
+  // FIX 6: validar que data de início foi informada para escala quinzenal
+  if (repeat === 'biweekly' && !document.getElementById('scStartDate').value) {
+    toast('Informe a data de início do ciclo quinzenal!'); return;
+  }
+
   let customDates = [];
   if (repeat === 'custom') {
     const raw = document.getElementById('scCustomDates').value;
@@ -1267,8 +1203,6 @@ function saveScale() {
     days:  [...S.scDays],
     repeat,
     customDates,
-  
-    // 🔥 NOVO
     startDate: document.getElementById('scStartDate').value
   };
 
@@ -1302,9 +1236,7 @@ function deleteScale(id) {
   toast('Escala removida!');
 }
 
-/* ============================
-   SCALE CARDS
-   ============================ */
+/* ── SCALE CARDS ── */
 function renderScaleCards() {
   const el = document.getElementById('scaleCards');
   if (S.scales.length === 0) {
@@ -1333,9 +1265,7 @@ function renderScaleCards() {
   }).join('');
 }
 
-/* ============================
-   LEGEND
-   ============================ */
+/* ── LEGEND ── */
 function renderLegend() {
   const el = document.getElementById('legend');
   if (S.scales.length === 0) { el.innerHTML=''; return; }
@@ -1346,13 +1276,14 @@ function renderLegend() {
   ).join('');
 }
 
-/* ============================
-   STATS
-   ============================ */
+/* ── STATS ──
+   FIX 5: calcular horas por escala individualmente, contando só
+   os dias do mês em que cada escala específica aparece. */
 function renderStats() {
   const dim = new Date(S.year, S.month+1, 0).getDate();
   let workSet = new Set();
-  for (let d=1;d<=dim;d++) {
+
+  for (let d=1; d<=dim; d++) {
     const ds = dateStr(S.year, S.month, d);
     if (getScalesForDate(ds).length > 0) workSet.add(ds);
   }
@@ -1360,25 +1291,31 @@ function renderStats() {
   const monthPfx = `${S.year}-${String(S.month+1).padStart(2,'0')}`;
   const evs = S.events.filter(e=>e.date&&e.date.startsWith(monthPfx));
 
+  // Conta horas somando por cada dia de cada escala, não pelo total agregado
   let totalMins = 0;
   S.scales.forEach(sc => {
-    if (sc.start && sc.end) {
-      const [sh,sm] = sc.start.split(':').map(Number);
-      const [eh,em] = sc.end.split(':').map(Number);
-      const mins = (eh*60+em) - (sh*60+sm);
-      totalMins += mins * workSet.size;
+    if (!sc.start || !sc.end) return;
+    const [sh,sm] = sc.start.split(':').map(Number);
+    const [eh,em] = sc.end.split(':').map(Number);
+    const mins = (eh*60+em) - (sh*60+sm);
+    if (mins <= 0) return;
+
+    for (let d=1; d<=dim; d++) {
+      const ds = dateStr(S.year, S.month, d);
+      const scalesOnDay = getScalesForDate(ds);
+      if (scalesOnDay.some(s => s.id === sc.id)) {
+        totalMins += mins;
+      }
     }
   });
 
   document.getElementById('statWork').textContent = workSet.size;
   document.getElementById('statEvents').textContent = evs.length;
   document.getElementById('statFree').textContent = dim - workSet.size;
-  document.getElementById('statHours').textContent = totalMins>0 ? `${Math.round(totalMins/60)}h` : '—';
+  document.getElementById('statHours').textContent = totalMins > 0 ? `${Math.round(totalMins/60)}h` : '—';
 }
 
-/* ============================
-   GOOGLE SHEETS
-   ============================ */
+/* ── GOOGLE SHEETS ── */
 function openSheetsModal() {
   document.getElementById('shUrl').value = S.sheets.url||'';
   document.getElementById('shScript').value = S.sheets.script||'';
@@ -1395,33 +1332,9 @@ function saveSheets() {
   toast(S.sheets.connected ? '✅ Planilha configurada!' : 'Configuração salva.');
 }
 
-// 1. Variável para controlar o intervalo (evita duplicidade)
 let syncInterval = null;
 
-async function testSheets() {
-  const url = document.getElementById('shUrl').value.trim();
-  if (!url) { toast('Informe a URL!'); return; }
-  toast('🔄 Testando...');
-  try {
-    const r = await fetch(url);
-    if (r.ok) {
-      // Se o retorno for JSON, já processamos aqui para validar
-      const data = await r.json(); 
-      toast(`✅ Conectado! ${data.length || 0} registros encontrados.`);
-      
-      S.sheets.connected = true; 
-      S.sheets.lastSync = new Date().toISOString();
-      S.sheets.script = url; // Garante que a URL está salva
-      
-      save(); 
-      updateSheetsStatus();
-      iniciarAutoSync(); // Inicia o loop após conectar com sucesso
-    } else {
-      toast('❌ Erro ao conectar. Verifique a URL.');
-    }
-  } catch(e) { toast('❌ ' + e.message); }
-}
-
+/* FIX 1: apenas UMA função testSheets (versão CSV correta) */
 async function testSheets() {
   const url = document.getElementById('shUrl').value.trim();
   if (!url) { toast('Informe a URL CSV!'); return; }
@@ -1429,65 +1342,60 @@ async function testSheets() {
   try {
     const r = await fetch(url);
     if (r.ok) {
-      const text = await r.text(); // 1. Lemos como texto (CSV), não JSON
-      const rows = text.trim().split('\n'); // 2. Contamos as linhas do CSV
-      
+      const text = await r.text();
+      const rows = text.trim().split('\n');
       toast(`✅ Conectado! ${rows.length - 1} registros na planilha.`);
-      
-      S.sheets.connected = true; 
+      S.sheets.connected = true;
       S.sheets.lastSync = new Date().toISOString();
-      S.sheets.url = url; 
-      
-      save(); 
+      S.sheets.url = url;
+      save();
       updateSheetsStatus();
-      iniciarAutoSync(); 
+      iniciarAutoSync();
     } else {
       toast('❌ Erro ao conectar. Verifique a URL.');
     }
-  } catch(e) { 
+  } catch(e) {
     toast('❌ Erro: Verifique se a URL é um CSV válido.');
     console.error(e);
   }
 }
 
+/* FIX 2: syncToSheets lê S.sheets.script (estado), não do DOM */
 async function syncToSheets(ev) {
-  // Pegamos a URL do campo específico do Apps Script (shScript)
-  const scriptUrl = document.getElementById('shScript').value.trim();
-  if (!scriptUrl) return;
-  
+  if (!S.sheets.script) return;
   try {
-    // Adicionamos a ação de "create" para o Apps Script entender
     const payload = { ...ev, action: 'create' };
-
-    await fetch(scriptUrl, {
+    await fetch(S.sheets.script, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-
     S.sheets.lastSync = new Date().toISOString();
     save();
-    
-    // Pequeno delay para o Google processar antes de atualizarmos a interface
     setTimeout(() => {
-      testSheets(); 
+      updateSheetsStatus();
       toast('☁️ Sincronizado com sucesso!');
-    }, 800); 
-
-  } catch(e) { 
-    console.warn('Erro na sincronização:', e); 
+    }, 800);
+  } catch(e) {
+    console.warn('Erro na sincronização:', e);
   }
 }
 
-// 2. Nova função para manter o loop de 30 segundos
 function iniciarAutoSync() {
   if (syncInterval) clearInterval(syncInterval);
-  
-  // Atualiza a cada 30 segundos se estiver conectado
   syncInterval = setInterval(() => {
-    if (S.sheets.connected) {
-      testSheets(); 
+    if (S.sheets.connected && S.sheets.url) {
+      fetch(S.sheets.url)
+        .then(r => r.ok && r.text())
+        .then(text => {
+          if (text) {
+            S.sheets.lastSync = new Date().toISOString();
+            save();
+            updateSheetsStatus();
+          }
+        })
+        .catch(() => {});
     }
   }, 30000);
 }
@@ -1496,26 +1404,21 @@ function updateSheetsStatus() {
   const dot  = document.getElementById('statusDot');
   const text = document.getElementById('statusText');
   const info = document.getElementById('syncInfo');
-  
   if (S.sheets.connected) {
     dot.className = 'sdot-status on';
     text.textContent = 'Google Sheets conectado';
     const ls = S.sheets.lastSync ? new Date(S.sheets.lastSync).toLocaleString('pt-BR') : 'nunca';
     info.textContent = `Sincronização ativa (30s). Última: ${ls}`;
-    
-    // Garante que o loop está rodando se a página foi recarregada
     if (!syncInterval) iniciarAutoSync();
   } else {
     dot.className = 'sdot-status';
     text.textContent = 'Google Sheets desconectado';
     info.textContent = 'Configure para sincronizar dados';
-    if (syncInterval) clearInterval(syncInterval);
+    if (syncInterval) { clearInterval(syncInterval); syncInterval = null; }
   }
 }
 
-/* ============================
-   UI HELPERS
-   ============================ */
+/* ── UI HELPERS ── */
 function setType(btn) {
   S.evType = btn.dataset.type;
   document.querySelectorAll('#eventModal .type-btn').forEach(b=>b.classList.remove('active'));
@@ -1528,9 +1431,7 @@ function renderColorPicker(containerId, key) {
   ).join('');
 }
 
-function pickColor(c, key, pid) {
-  S[key]=c; renderColorPicker(pid,key);
-}
+function pickColor(c, key, pid) { S[key]=c; renderColorPicker(pid,key); }
 
 function openModal(id) {
   document.getElementById(id).classList.add('open');
@@ -1598,15 +1499,13 @@ function uid() {
   return Math.random().toString(36).slice(2)+Date.now().toString(36);
 }
 
-/* ============================
-   INIT
-   ============================ */
+/* ── INIT ── */
 function init() {
   load();
   if (S.scales.length===0 && S.events.length===0) {
     S.scales.push({
       id:uid(),name:'Trabalho',start:'08:00',end:'17:00',
-      color:'#2D6A4F',days:[1,2,3,4,5],repeat:'weekly',customDates:[]
+      color:'#2D6A4F',days:[1,2,3,4,5],repeat:'weekly',customDates:[],startDate:''
     });
     const t = todayStr();
     S.events.push({

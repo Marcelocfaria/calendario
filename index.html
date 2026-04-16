@@ -1218,9 +1218,13 @@ function editScale(id) {
 
 function onRepeatChange() {
   const v = document.getElementById('scRepeat').value;
+
   document.getElementById('scDaysGroup').style.display   = v==='custom' ? 'none' : 'block';
   document.getElementById('scCustomGroup').style.display = v==='custom' ? 'block' : 'none';
   document.getElementById('scBiweeklyInfo').style.display = v==='biweekly' ? 'block' : 'none';
+
+  // 🔥 NOVO
+  document.getElementById('scStartDateGroup').style.display = v==='biweekly' ? 'block' : 'none';
 }
 
 function toggleDay(btn) {

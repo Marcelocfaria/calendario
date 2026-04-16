@@ -1395,6 +1395,9 @@ function saveSheets() {
   toast(S.sheets.connected ? '✅ Planilha configurada!' : 'Configuração salva.');
 }
 
+// 1. Variável para controlar o intervalo (evita duplicidade)
+let syncInterval = null;
+
 async function testSheets() {
   const url = document.getElementById('shUrl').value.trim();
   if (!url) { toast('Informe a URL!'); return; }
@@ -1402,37 +1405,77 @@ async function testSheets() {
   try {
     const r = await fetch(url);
     if (r.ok) {
-      const t = await r.text();
-      toast(`✅ OK! ${t.trim().split('\n').length} linhas`);
-      S.sheets.connected=true; S.sheets.lastSync=new Date().toISOString();
-      save(); updateSheetsStatus();
-    } else toast('❌ Erro ao conectar. Verifique a URL.');
-  } catch(e) { toast('❌ '+e.message); }
+      // Se o retorno for JSON, já processamos aqui para validar
+      const data = await r.json(); 
+      toast(`✅ Conectado! ${data.length || 0} registros encontrados.`);
+      
+      S.sheets.connected = true; 
+      S.sheets.lastSync = new Date().toISOString();
+      S.sheets.script = url; // Garante que a URL está salva
+      
+      save(); 
+      updateSheetsStatus();
+      iniciarAutoSync(); // Inicia o loop após conectar com sucesso
+    } else {
+      toast('❌ Erro ao conectar. Verifique a URL.');
+    }
+  } catch(e) { toast('❌ ' + e.message); }
 }
 
 async function syncToSheets(ev) {
   if (!S.sheets.script) return;
   try {
-    await fetch(S.sheets.script,{method:'POST',mode:'no-cors',
-      headers:{'Content-Type':'application/json'},body:JSON.stringify(ev)});
-    S.sheets.lastSync=new Date().toISOString(); save(); updateSheetsStatus();
-    toast('☁️ Sincronizado!');
-  } catch(e){console.warn(e);}
+    // O 'no-cors' faz com que o navegador não consiga ler a resposta (r.ok será false)
+    // mas o dado CHEGA no Google Sheets. 
+    await fetch(S.sheets.script, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(ev)
+    });
+
+    // Como o 'no-cors' impede de esperar a confirmação real, 
+    // aguardamos um pequeno delay e forçamos a atualização da interface.
+    setTimeout(() => {
+      testSheets(); // Reutilizamos o testSheets (que é um GET) para baixar os dados novos
+      toast('☁️ Sincronizado!');
+    }, 500); 
+
+  } catch(e) { 
+    console.warn(e); 
+  }
+}
+
+// 2. Nova função para manter o loop de 30 segundos
+function iniciarAutoSync() {
+  if (syncInterval) clearInterval(syncInterval);
+  
+  // Atualiza a cada 30 segundos se estiver conectado
+  syncInterval = setInterval(() => {
+    if (S.sheets.connected) {
+      testSheets(); 
+    }
+  }, 30000);
 }
 
 function updateSheetsStatus() {
   const dot  = document.getElementById('statusDot');
   const text = document.getElementById('statusText');
   const info = document.getElementById('syncInfo');
+  
   if (S.sheets.connected) {
-    dot.className='sdot-status on';
-    text.textContent='Google Sheets conectado';
+    dot.className = 'sdot-status on';
+    text.textContent = 'Google Sheets conectado';
     const ls = S.sheets.lastSync ? new Date(S.sheets.lastSync).toLocaleString('pt-BR') : 'nunca';
-    info.textContent=`Última sinc: ${ls}`;
+    info.textContent = `Sincronização ativa (30s). Última: ${ls}`;
+    
+    // Garante que o loop está rodando se a página foi recarregada
+    if (!syncInterval) iniciarAutoSync();
   } else {
-    dot.className='sdot-status';
-    text.textContent='Google Sheets desconectado';
-    info.textContent='Configure para sincronizar dados';
+    dot.className = 'sdot-status';
+    text.textContent = 'Google Sheets desconectado';
+    info.textContent = 'Configure para sincronizar dados';
+    if (syncInterval) clearInterval(syncInterval);
   }
 }
 

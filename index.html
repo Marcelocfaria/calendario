@@ -886,13 +886,20 @@ function parseDate(str) {
 function renderCalendar() {
   document.getElementById('monthLabel').textContent = `${MONTHS[S.month]} ${S.year}`;
   const grid = document.getElementById('calGrid');
+
   const today = todayStr();
-  const firstDow = new Date(S.year, S.month, 1).getDay();
-  const daysInMonth = new Date(S.year, S.month+1, 0).getDate();
+
+  // FORÇA cálculo correto (sem bug de fuso)
+  const firstDate = new Date(Date.UTC(S.year, S.month, 1));
+  const firstDow = firstDate.getUTCDay();
+
+  const daysInMonth = new Date(S.year, S.month + 1, 0).getDate();
   const daysInPrev = new Date(S.year, S.month, 0).getDate();
-  const totalCells = Math.ceil((firstDow + daysInMonth) / 7) * 7;
 
   let html = '';
+
+  // SEMPRE 6 semanas (padrão calendário)
+  const totalCells = 42;
 
   for (let i = 0; i < totalCells; i++) {
     let cellDate, isOther = false;
@@ -903,13 +910,15 @@ function renderCalendar() {
       const d = daysInPrev - (firstDow - 1 - i);
       cellDate = dateStr(prevY, prevM, d);
       isOther = true;
-    } else if (i >= firstDow + daysInMonth) {
+    } 
+    else if (i >= firstDow + daysInMonth) {
       const nextM = S.month === 11 ? 0 : S.month + 1;
       const nextY = S.month === 11 ? S.year + 1 : S.year;
       const d = i - (firstDow + daysInMonth) + 1;
       cellDate = dateStr(nextY, nextM, d);
       isOther = true;
-    } else {
+    } 
+    else {
       const d = i - firstDow + 1;
       cellDate = dateStr(S.year, S.month, d);
     }
@@ -917,6 +926,7 @@ function renderCalendar() {
     const date = parseDate(cellDate);
     const dow = date.getDay();
     const dayNum = date.getDate();
+
     const isToday = cellDate === today;
     const isSel = cellDate === S.selDate;
     const isWknd = dow === 0 || dow === 6;
@@ -926,7 +936,9 @@ function renderCalendar() {
 
     let pipHtml = '';
     const allColors = [...scales.map(s => s.color), ...evs.map(e => e.color)].slice(0, 4);
-    allColors.forEach(c => { pipHtml += `<div class="pip" style="background:${c}"></div>`; });
+    allColors.forEach(c => {
+      pipHtml += `<div class="pip" style="background:${c}"></div>`;
+    });
 
     let cls = 'day-cell';
     if (isOther) cls += ' other';

@@ -1,0 +1,530 @@
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS.CSS
+   Modais (Bottom Sheet), Botões, Stat Cards,
+   Formulários, Icon Buttons, Toast, Weekday Picker
+═══════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────
+   MODAL — BOTTOM SHEET
+   Padrão: invisível (aria-hidden="true")
+   Ativo:  .modal--open (adicionado via JS)
+───────────────────────────────────────── */
+.modal {
+  /* Posicionamento fixo sobre tudo */
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  /* Flex para centralizar o sheet na horizontal */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* Estado inicial: invisível e não interagível */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-sheet) var(--ease-out-expo);
+}
+
+.modal--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Backdrop escuro */
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-bg-overlay);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  /* Não bloqueia a transição do sheet */
+  transition: opacity var(--duration-sheet) var(--ease-out-expo);
+}
+
+/* Sheet em si */
+.modal__sheet {
+  position: relative;
+  z-index: 1;
+  width:  100%;
+  max-width: var(--max-width-app);
+  /* Limita altura máxima com scroll interno */
+  max-height: 92dvh;
+  max-height: 92vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow:    var(--shadow-sheet);
+  /* Espaço extra para safe area do iPhone */
+  padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  /* Animação: sobe de baixo */
+  transform: translateY(100%);
+  transition: transform var(--duration-sheet) var(--ease-out-expo);
+}
+
+.modal--open .modal__sheet {
+  transform: translateY(0);
+}
+
+/* Handle de arrastar */
+.modal__handle {
+  width:  40px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-border-strong);
+  margin: var(--space-3) auto var(--space-2);
+  opacity: 0.5;
+}
+
+/* Cabeçalho do modal */
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-5) var(--space-4);
+}
+
+.modal__title {
+  font-family:    var(--font-display);
+  font-size:      var(--text-xl);
+  font-weight:    var(--weight-regular);
+  letter-spacing: var(--tracking-tight);
+  color:          var(--color-text-primary);
+}
+
+.modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:  36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  background-color: var(--color-bg-sunken);
+  transition:
+    background-color var(--duration-fast),
+    color            var(--duration-fast),
+    transform        var(--duration-base) var(--ease-spring);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modal__close:hover {
+  background-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.modal__close:active { transform: scale(0.88); }
+
+/* Corpo do modal */
+.modal__body {
+  padding: 0 var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Rodapé do modal */
+.modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-5) var(--space-2);
+}
+
+/* ─────────────────────────────────────────
+   FORMULÁRIOS
+───────────────────────────────────────── */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+}
+
+.form-row {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.form-label {
+  font-size:      var(--text-xs);
+  font-weight:    var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color:          var(--color-text-secondary);
+}
+
+.form-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-3);
+  background-color: var(--color-bg-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size:   var(--text-sm);
+  font-weight: var(--weight-medium);
+  color:       var(--color-text-primary);
+  transition:
+    border-color     var(--duration-fast),
+    background-color var(--duration-fast),
+    box-shadow       var(--duration-fast);
+  /* Remove aparência nativa no iOS */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-input:focus {
+  border-color: var(--color-accent);
+  background-color: var(--color-bg-elevated);
+  box-shadow: 0 0 0 3px hsla(var(--hue-accent), 72%, 46%, 0.15);
+  outline: none;
+}
+
+.form-select {
+  /* Seta customizada */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-right: var(--space-8);
+  cursor: pointer;
+}
+
+.form-textarea {
+  height: auto;
+  padding: var(--space-3);
+  resize: none;
+  line-height: var(--leading-normal);
+  font-size: var(--text-sm);
+}
+
+/* Opções condicionais de escala */
+.scale-opts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background-color: var(--color-bg-sunken);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  animation: fadeIn var(--duration-base) var(--ease-out-expo);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-var(--space-2)); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─────────────────────────────────────────
+   WEEKDAY PICKER
+───────────────────────────────────────── */
+.weekday-picker {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.weekday-btn {
+  flex: 1;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  font-size:   var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  color:       var(--color-text-secondary);
+  transition:
+    background-color var(--duration-fast),
+    border-color     var(--duration-fast),
+    color            var(--duration-fast),
+    transform        var(--duration-base) var(--ease-spring);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.weekday-btn:active { transform: scale(0.88); }
+
+.weekday-btn--active {
+  background-color: var(--color-accent);
+  border-color:     var(--color-accent);
+  color:            var(--color-text-inverse);
+}
+
+/* ─────────────────────────────────────────
+   BOTÕES
+───────────────────────────────────────── */
+
+/* Base */
+.btn {
+  display:        inline-flex;
+  align-items:    center;
+  justify-content:center;
+  gap:            var(--space-2);
+  height:         48px;
+  padding:        0 var(--space-6);
+  border-radius:  var(--radius-md);
+  font-family:    var(--font-ui);
+  font-size:      var(--text-sm);
+  font-weight:    var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  white-space:    nowrap;
+  cursor:         pointer;
+  transition:
+    background-color var(--duration-fast),
+    color            var(--duration-fast),
+    box-shadow       var(--duration-fast),
+    transform        var(--duration-base) var(--ease-spring),
+    border-color     var(--duration-fast);
+  -webkit-tap-highlight-color: transparent;
+  border: 1.5px solid transparent;
+  /* Previne seleção acidental */
+  user-select: none;
+}
+
+.btn:active { transform: scale(0.95); }
+
+/* Primário */
+.btn--primary {
+  background-color: var(--color-text-primary);
+  color:            var(--color-text-inverse);
+  border-color:     var(--color-text-primary);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-accent);
+  border-color:     var(--color-accent);
+  box-shadow:       var(--shadow-sm);
+}
+
+/* Outline */
+.btn--outline {
+  background-color: transparent;
+  color:            var(--color-text-primary);
+  border-color:     var(--color-border-strong);
+}
+
+.btn--outline:hover {
+  background-color: var(--color-bg-sunken);
+  border-color:     var(--color-text-secondary);
+}
+
+/* Ghost */
+.btn--ghost {
+  background-color: transparent;
+  color:            var(--color-accent);
+  border-color:     transparent;
+}
+
+.btn--ghost:hover {
+  background-color: var(--color-accent-muted);
+}
+
+/* Danger */
+.btn--danger {
+  background-color: transparent;
+  color:            var(--color-danger);
+  border-color:     transparent;
+}
+
+.btn--danger:hover {
+  background-color: var(--color-danger-muted);
+  border-color:     var(--color-danger);
+}
+
+/* Tamanhos */
+.btn--sm {
+  height:    36px;
+  padding:   0 var(--space-4);
+  font-size: var(--text-xs);
+}
+
+.btn--lg {
+  height:    56px;
+  padding:   0 var(--space-8);
+  font-size: var(--text-base);
+}
+
+/* ─────────────────────────────────────────
+   ICON BUTTON
+───────────────────────────────────────── */
+.icon-btn {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:  40px;
+  height: 40px;
+  border-radius:   var(--radius-full);
+  color:           var(--color-text-secondary);
+  background-color: transparent;
+  border: 1px solid transparent;
+  transition:
+    background-color var(--duration-fast),
+    color            var(--duration-fast),
+    border-color     var(--duration-fast),
+    transform        var(--duration-base) var(--ease-spring);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.icon-btn:hover {
+  background-color: var(--color-bg-sunken);
+  color:            var(--color-text-primary);
+}
+
+.icon-btn:active { transform: scale(0.88); }
+
+/* Variante primária (botão +) */
+.icon-btn--primary {
+  background-color: var(--color-text-primary);
+  color:            var(--color-text-inverse);
+  border-color:     var(--color-text-primary);
+}
+
+.icon-btn--primary:hover {
+  background-color: var(--color-accent);
+  border-color:     var(--color-accent);
+  box-shadow:       var(--shadow-sm);
+}
+
+/* Animação de spin para sync */
+.icon-btn--spinning svg {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─────────────────────────────────────────
+   STAT CARDS (Dashboard / Resumo)
+───────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  padding: 0 var(--space-5) var(--space-2);
+}
+
+.stat-card {
+  background-color: var(--color-bg-elevated);
+  border-radius:    var(--radius-lg);
+  padding: var(--space-5) var(--space-4);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  /* Entrada animada */
+  animation: slideUp var(--duration-slow) var(--ease-out-expo) both;
+}
+
+.stat-card:nth-child(1) { animation-delay:  60ms; }
+.stat-card:nth-child(2) { animation-delay: 100ms; }
+.stat-card:nth-child(3) { animation-delay: 140ms; }
+.stat-card:nth-child(4) { animation-delay: 180ms; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(var(--space-4)); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card__label {
+  font-size:      var(--text-xs);
+  font-weight:    var(--weight-semibold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color:          var(--color-text-tertiary);
+}
+
+.stat-card__value {
+  font-family:    var(--font-display);
+  font-size:      var(--text-3xl);
+  font-weight:    var(--weight-regular);
+  letter-spacing: var(--tracking-tight);
+  color:          var(--color-text-primary);
+  line-height:    var(--leading-tight);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Valor menor (ex: data do próximo plantão) */
+.stat-card__value--sm {
+  font-size:   var(--text-xl);
+  font-family: var(--font-ui);
+  font-weight: var(--weight-semibold);
+}
+
+/* Accent no primeiro card */
+.stat-card:first-child .stat-card__value {
+  color: var(--color-accent);
+}
+
+/* ─────────────────────────────────────────
+   TOAST NOTIFICATION
+───────────────────────────────────────── */
+.toast {
+  position:   fixed;
+  bottom:     calc(var(--tabnav-height) + var(--safe-bottom) + var(--space-4));
+  left:       50%;
+  transform:  translateX(-50%) translateY(var(--space-4));
+  z-index:    400;
+  max-width:  calc(var(--max-width-app) - var(--space-10));
+  width:      max-content;
+  padding:    var(--space-3) var(--space-5);
+  background-color: var(--color-text-primary);
+  color:            var(--color-text-inverse);
+  border-radius:    var(--radius-full);
+  font-size:        var(--text-sm);
+  font-weight:      var(--weight-medium);
+  box-shadow:       var(--shadow-lg);
+  /* Estado inicial: invisível */
+  opacity:    0;
+  pointer-events: none;
+  transition:
+    opacity   var(--duration-base) var(--ease-out-expo),
+    transform var(--duration-base) var(--ease-spring);
+  white-space: nowrap;
+}
+
+.toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+/* Variantes */
+.toast--success { background-color: var(--color-success); }
+.toast--error   { background-color: var(--color-danger);  }
+.toast--warning { background-color: var(--color-warning); color: var(--color-text-primary); }
+
+/* ─────────────────────────────────────────
+   SKELETON LOADING (para listas)
+───────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-sunken)  25%,
+    var(--color-border)     50%,
+    var(--color-bg-sunken)  75%
+  );
+  background-size: 200% 100%;
+  border-radius: var(--radius-sm);
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position:  200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─────────────────────────────────────────
+   FOCUS VISIBLE (acessibilidade)
+───────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius:  var(--radius-sm);
+}
+
+/* Remove outline para cliques com mouse */
+:focus:not(:focus-visible) {
+  outline: none;
+}

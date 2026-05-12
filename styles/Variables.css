@@ -1,0 +1,219 @@
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS — variables.css
+   Sistema de tokens com base HSL + espaçamento em múltiplos de 4px
+   Suporte automático a dark/light via prefers-color-scheme
+═══════════════════════════════════════════════════════════ */
+
+/* ── LIGHT MODE (default) ── */
+:root {
+  /* --- Paleta base HSL --- */
+  --hue-neutral: 36;          /* warm off-white / warm black */
+  --hue-accent:  24;          /* terracota / âmbar */
+
+  /* Superfícies */
+  --color-bg:           hsl(var(--hue-neutral), 18%, 96%);
+  --color-bg-elevated:  hsl(var(--hue-neutral), 20%, 100%);
+  --color-bg-sunken:    hsl(var(--hue-neutral), 14%, 91%);
+  --color-bg-overlay:   hsla(var(--hue-neutral), 10%, 10%, 0.45);
+
+  /* Texto */
+  --color-text-primary:   hsl(var(--hue-neutral),  8%, 10%);
+  --color-text-secondary: hsl(var(--hue-neutral),  6%, 40%);
+  --color-text-tertiary:  hsl(var(--hue-neutral),  4%, 62%);
+  --color-text-inverse:   hsl(var(--hue-neutral), 20%, 97%);
+
+  /* Acento */
+  --color-accent:         hsl(var(--hue-accent), 72%, 46%);
+  --color-accent-muted:   hsl(var(--hue-accent), 60%, 92%);
+  --color-accent-hover:   hsl(var(--hue-accent), 72%, 38%);
+
+  /* Bordas */
+  --color-border:         hsl(var(--hue-neutral), 10%, 86%);
+  --color-border-strong:  hsl(var(--hue-neutral),  8%, 70%);
+
+  /* Estados */
+  --color-danger:         hsl(0, 68%, 50%);
+  --color-danger-muted:   hsl(0, 60%, 94%);
+  --color-success:        hsl(150, 52%, 38%);
+  --color-success-muted:  hsl(150, 50%, 92%);
+  --color-warning:        hsl(42, 88%, 50%);
+
+  /* Indicadores de tipo de evento */
+  --color-shift:    hsl(var(--hue-accent), 72%, 46%);   /* plantão */
+  --color-meeting:  hsl(210, 65%, 50%);                 /* reunião */
+  --color-off:      hsl(150, 52%, 42%);                 /* folga */
+  --color-other:    hsl(var(--hue-neutral), 8%, 55%);   /* outro */
+
+  /* --- Topbar --- */
+  --color-topbar-bg:     hsl(var(--hue-neutral), 18%, 96%);
+  --color-topbar-border: hsl(var(--hue-neutral), 10%, 88%);
+
+  /* --- Tab nav --- */
+  --color-tab-bg:        hsl(var(--hue-neutral), 18%, 96%);
+  --color-tab-border:    hsl(var(--hue-neutral), 10%, 88%);
+  --color-tab-active:    hsl(var(--hue-neutral),  8%, 10%);
+  --color-tab-inactive:  hsl(var(--hue-neutral),  5%, 55%);
+
+  /* --- Sombras (suaves, warm-tinted) --- */
+  --shadow-xs:  0 1px  2px hsla(var(--hue-neutral), 10%, 10%, 0.06);
+  --shadow-sm:  0 2px  6px hsla(var(--hue-neutral), 10%, 10%, 0.08),
+                0 1px  2px hsla(var(--hue-neutral), 10%, 10%, 0.05);
+  --shadow-md:  0 4px 16px hsla(var(--hue-neutral), 10%, 10%, 0.10),
+                0 2px  4px hsla(var(--hue-neutral), 10%, 10%, 0.06);
+  --shadow-lg:  0 8px 32px hsla(var(--hue-neutral), 10%, 10%, 0.14),
+                0 4px 8px  hsla(var(--hue-neutral), 10%, 10%, 0.08);
+  --shadow-sheet: 0 -4px 32px hsla(var(--hue-neutral), 10%, 10%, 0.14);
+}
+
+/* ── DARK MODE ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Superfícies */
+    --color-bg:           hsl(var(--hue-neutral),  8%, 8%);
+    --color-bg-elevated:  hsl(var(--hue-neutral),  8%, 12%);
+    --color-bg-sunken:    hsl(var(--hue-neutral),  8%, 6%);
+    --color-bg-overlay:   hsla(var(--hue-neutral),  8%, 4%, 0.65);
+
+    /* Texto */
+    --color-text-primary:   hsl(var(--hue-neutral), 15%, 94%);
+    --color-text-secondary: hsl(var(--hue-neutral), 10%, 64%);
+    --color-text-tertiary:  hsl(var(--hue-neutral),  6%, 42%);
+    --color-text-inverse:   hsl(var(--hue-neutral),  8%, 8%);
+
+    /* Acento (levemente mais brilhante no dark) */
+    --color-accent:         hsl(var(--hue-accent), 78%, 58%);
+    --color-accent-muted:   hsl(var(--hue-accent), 30%, 18%);
+    --color-accent-hover:   hsl(var(--hue-accent), 78%, 66%);
+
+    /* Bordas */
+    --color-border:         hsl(var(--hue-neutral),  8%, 20%);
+    --color-border-strong:  hsl(var(--hue-neutral),  6%, 32%);
+
+    /* Estados */
+    --color-danger:         hsl(0, 72%, 62%);
+    --color-danger-muted:   hsl(0, 40%, 18%);
+    --color-success:        hsl(150, 58%, 50%);
+    --color-success-muted:  hsl(150, 30%, 16%);
+
+    /* Indicadores de tipo de evento */
+    --color-shift:    hsl(var(--hue-accent), 78%, 58%);
+    --color-meeting:  hsl(210, 72%, 62%);
+    --color-off:      hsl(150, 58%, 50%);
+    --color-other:    hsl(var(--hue-neutral), 6%, 50%);
+
+    /* Topbar */
+    --color-topbar-bg:     hsl(var(--hue-neutral), 8%, 10%);
+    --color-topbar-border: hsl(var(--hue-neutral), 8%, 16%);
+
+    /* Tab nav */
+    --color-tab-bg:        hsl(var(--hue-neutral), 8%, 10%);
+    --color-tab-border:    hsl(var(--hue-neutral), 8%, 16%);
+    --color-tab-active:    hsl(var(--hue-neutral), 15%, 94%);
+    --color-tab-inactive:  hsl(var(--hue-neutral),  6%, 46%);
+
+    /* Sombras (mais pronunciadas no dark) */
+    --shadow-xs:  0 1px  2px hsla(0, 0%, 0%, 0.20);
+    --shadow-sm:  0 2px  6px hsla(0, 0%, 0%, 0.28),
+                  0 1px  2px hsla(0, 0%, 0%, 0.18);
+    --shadow-md:  0 4px 16px hsla(0, 0%, 0%, 0.36),
+                  0 2px  4px hsla(0, 0%, 0%, 0.22);
+    --shadow-lg:  0 8px 32px hsla(0, 0%, 0%, 0.48),
+                  0 4px  8px hsla(0, 0%, 0%, 0.28);
+    --shadow-sheet: 0 -4px 32px hsla(0, 0%, 0%, 0.50);
+  }
+}
+
+/* ─────────────────────────────────────────
+   TIPOGRAFIA
+───────────────────────────────────────── */
+:root {
+  /* Famílias */
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-ui:      'Syne', system-ui, sans-serif;
+
+  /* Escala modular (ratio 1.25 — Major Third) */
+  --text-xs:   0.70rem;   /*  ~11px */
+  --text-sm:   0.825rem;  /*  ~13px */
+  --text-base: 1rem;      /*   16px */
+  --text-md:   1.125rem;  /*  ~18px */
+  --text-lg:   1.25rem;   /*   20px */
+  --text-xl:   1.563rem;  /*   25px */
+  --text-2xl:  1.953rem;  /*  ~31px */
+  --text-3xl:  2.441rem;  /*  ~39px */
+
+  /* Pesos */
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold:600;
+  --weight-bold:    700;
+
+  /* Line heights */
+  --leading-tight:  1.2;
+  --leading-snug:   1.35;
+  --leading-normal: 1.5;
+  --leading-loose:  1.7;
+
+  /* Letter spacing */
+  --tracking-tight:  -0.02em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.04em;
+  --tracking-wider:   0.08em;
+  --tracking-widest:  0.14em;
+}
+
+/* ─────────────────────────────────────────
+   ESPAÇAMENTO (base 4px)
+───────────────────────────────────────── */
+:root {
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  28px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+}
+
+/* ─────────────────────────────────────────
+   RAIOS DE BORDA
+───────────────────────────────────────── */
+:root {
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-full: 9999px;
+}
+
+/* ─────────────────────────────────────────
+   LAYOUT & BREAKPOINTS
+───────────────────────────────────────── */
+:root {
+  --max-width-app:   480px;
+
+  /* Chrome fixas */
+  --topbar-height:   56px;
+  --tabnav-height:   60px;
+  --safe-bottom:     env(safe-area-inset-bottom, 0px);
+
+  /* Conteúdo deslocado pelas barras */
+  --content-offset:  calc(var(--topbar-height) + var(--tabnav-height));
+}
+
+/* ─────────────────────────────────────────
+   TRANSIÇÕES
+───────────────────────────────────────── */
+:root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-expo:  cubic-bezier(0.7,  0, 0.84, 0);
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-fast:   120ms;
+  --duration-base:   220ms;
+  --duration-slow:   380ms;
+  --duration-sheet:  420ms;
+}

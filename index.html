@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f3ef" media="(prefers-color-scheme: light)" />
+    <meta name="description" content="Agenda e Escalas de Serviço — gestão de plantões com elegância." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Escalas" />
+
+    <title>Escalas — Agenda de Serviço</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- Fonts: Instrument Serif (display) + Syne (UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles (cascade order matters) -->
+    <link rel="stylesheet" href="styles/variables.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+  </head>
+
+  <body>
+    <!-- ════════════════════════════════════════
+         APP SHELL
+    ════════════════════════════════════════ -->
+    <div id="app" class="app" role="application" aria-label="Agenda de Escalas">
+
+      <!-- ── TOP BAR ── -->
+      <header class="topbar" role="banner">
+        <div class="topbar__inner">
+          <div class="topbar__brand">
+            <span class="topbar__logo" aria-hidden="true">◈</span>
+            <h1 class="topbar__title">Escalas</h1>
+          </div>
+          <div class="topbar__actions">
+            <button
+              id="btn-sync"
+              class="icon-btn"
+              aria-label="Sincronizar com Google Sheets"
+              title="Sincronizar"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+            </button>
+            <button
+              id="btn-add"
+              class="icon-btn icon-btn--primary"
+              aria-label="Adicionar novo evento"
+              title="Novo evento"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ── NAVIGATION TABS ── -->
+      <nav class="tab-nav" role="tablist" aria-label="Seções do aplicativo">
+        <button
+          class="tab-nav__item tab-nav__item--active"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-calendar"
+          id="tab-calendar"
+          data-tab="calendar"
+        >
+          <svg class="tab-nav__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span>Calendário</span>
+        </button>
+
+        <button
+          class="tab-nav__item"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-scales"
+          id="tab-scales"
+          data-tab="scales"
+        >
+          <svg class="tab-nav__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span>Escalas</span>
+        </button>
+
+        <button
+          class="tab-nav__item"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-summary"
+          id="tab-summary"
+          data-tab="summary"
+        >
+          <svg class="tab-nav__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+          <span>Resumo</span>
+        </button>
+      </nav>
+
+      <!-- ── MAIN CONTENT ── -->
+      <main class="content" role="main">
+
+        <!-- ─── PANEL: CALENDÁRIO ─── -->
+        <section
+          id="panel-calendar"
+          class="panel panel--active"
+          role="tabpanel"
+          aria-labelledby="tab-calendar"
+        >
+          <!-- Month navigator -->
+          <div class="month-nav" aria-live="polite" aria-atomic="true">
+            <button id="btn-prev-month" class="month-nav__arrow" aria-label="Mês anterior">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <div class="month-nav__label">
+              <span id="month-name" class="month-nav__month"></span>
+              <span id="year-name" class="month-nav__year"></span>
+            </div>
+            <button id="btn-next-month" class="month-nav__arrow" aria-label="Próximo mês">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Calendar grid -->
+          <div class="calendar" role="grid" aria-label="Calendário">
+            <!-- Day-of-week headers -->
+            <div class="calendar__weekdays" role="row" aria-hidden="true">
+              <span>Dom</span>
+              <span>Seg</span>
+              <span>Ter</span>
+              <span>Qua</span>
+              <span>Qui</span>
+              <span>Sex</span>
+              <span>Sáb</span>
+            </div>
+            <!-- Day cells — rendered by calendar.js -->
+            <div id="calendar-grid" class="calendar__grid" role="rowgroup"></div>
+          </div>
+
+          <!-- Selected-day event list -->
+          <div id="day-events" class="day-events" aria-live="polite">
+            <p class="day-events__empty">Selecione um dia para ver os eventos.</p>
+          </div>
+        </section>
+
+        <!-- ─── PANEL: ESCALAS ─── -->
+        <section
+          id="panel-scales"
+          class="panel"
+          role="tabpanel"
+          aria-labelledby="tab-scales"
+          hidden
+        >
+          <div class="section-header">
+            <h2 class="section-header__title">Escalas de Serviço</h2>
+            <button id="btn-add-scale" class="btn btn--ghost btn--sm">
+              + Nova escala
+            </button>
+          </div>
+
+          <div id="scales-list" class="scales-list">
+            <!-- Rendered by calendar.js -->
+            <p class="empty-state">Nenhuma escala cadastrada.</p>
+          </div>
+        </section>
+
+        <!-- ─── PANEL: RESUMO ─── -->
+        <section
+          id="panel-summary"
+          class="panel"
+          role="tabpanel"
+          aria-labelledby="tab-summary"
+          hidden
+        >
+          <div class="section-header">
+            <h2 class="section-header__title">
+              Resumo <em id="summary-month-label"></em>
+            </h2>
+          </div>
+
+          <!-- Stats grid -->
+          <div class="stats-grid" role="list" aria-label="Estatísticas do mês">
+            <div class="stat-card" role="listitem">
+              <span class="stat-card__label">Plantões</span>
+              <span id="stat-shifts" class="stat-card__value">—</span>
+            </div>
+            <div class="stat-card" role="listitem">
+              <span class="stat-card__label">Horas</span>
+              <span id="stat-hours" class="stat-card__value">—</span>
+            </div>
+            <div class="stat-card" role="listitem">
+              <span class="stat-card__label">Dias livres</span>
+              <span id="stat-free" class="stat-card__value">—</span>
+            </div>
+            <div class="stat-card" role="listitem">
+              <span class="stat-card__label">Próximo</span>
+              <span id="stat-next" class="stat-card__value stat-card__value--sm">—</span>
+            </div>
+          </div>
+
+          <!-- Monthly event list -->
+          <div class="section-header section-header--sub">
+            <h3 class="section-header__title section-header__title--sm">Todos os eventos do mês</h3>
+          </div>
+          <div id="monthly-events-list" class="monthly-list">
+            <!-- Rendered by main.js -->
+          </div>
+
+          <!-- Sync status -->
+          <div class="sync-section">
+            <div class="sync-section__status">
+              <span id="sync-status-dot" class="sync-dot sync-dot--idle" aria-hidden="true"></span>
+              <span id="sync-status-text" class="sync-section__text">Não sincronizado</span>
+            </div>
+            <button id="btn-test-connection" class="btn btn--outline btn--sm">
+              Testar conexão
+            </button>
+          </div>
+        </section>
+
+      </main>
+
+    </div><!-- /#app -->
+
+    <!-- ════════════════════════════════════════
+         MODALS (Bottom Sheets)
+    ════════════════════════════════════════ -->
+
+    <!-- Modal: Adicionar / Editar Evento -->
+    <div
+      id="modal-event"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-event-title"
+      aria-hidden="true"
+    >
+      <div class="modal__backdrop" data-close-modal></div>
+      <div class="modal__sheet">
+        <div class="modal__handle" aria-hidden="true"></div>
+        <header class="modal__header">
+          <h2 id="modal-event-title" class="modal__title">Novo Evento</h2>
+          <button class="modal__close" data-close-modal aria-label="Fechar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </header>
+        <div class="modal__body">
+          <div class="form-field">
+            <label class="form-label" for="event-title">Título</label>
+            <input id="event-title" class="form-input" type="text" placeholder="Ex: Plantão noturno" autocomplete="off" />
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="event-date">Data</label>
+              <input id="event-date" class="form-input" type="date" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="event-type">Tipo</label>
+              <select id="event-type" class="form-input form-select">
+                <option value="shift">Plantão</option>
+                <option value="meeting">Reunião</option>
+                <option value="off">Folga</option>
+                <option value="other">Outro</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="event-start">Início</label>
+              <input id="event-start" class="form-input" type="time" value="07:00" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="event-end">Término</label>
+              <input id="event-end" class="form-input" type="time" value="19:00" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="event-notes">Observações</label>
+            <textarea id="event-notes" class="form-input form-textarea" placeholder="Opcional…" rows="2"></textarea>
+          </div>
+        </div>
+        <footer class="modal__footer">
+          <button id="btn-delete-event" class="btn btn--danger btn--sm" hidden>Excluir</button>
+          <button id="btn-save-event" class="btn btn--primary">Salvar evento</button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Modal: Adicionar / Editar Escala -->
+    <div
+      id="modal-scale"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-scale-title"
+      aria-hidden="true"
+    >
+      <div class="modal__backdrop" data-close-modal></div>
+      <div class="modal__sheet">
+        <div class="modal__handle" aria-hidden="true"></div>
+        <header class="modal__header">
+          <h2 id="modal-scale-title" class="modal__title">Nova Escala</h2>
+          <button class="modal__close" data-close-modal aria-label="Fechar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </header>
+        <div class="modal__body">
+          <div class="form-field">
+            <label class="form-label" for="scale-name">Nome da escala</label>
+            <input id="scale-name" class="form-input" type="text" placeholder="Ex: Escala 12×36" autocomplete="off" />
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="scale-type">Padrão de repetição</label>
+            <select id="scale-type" class="form-input form-select">
+              <option value="weekly">Semanal (dias fixos da semana)</option>
+              <option value="biweekly">Quinzenal</option>
+              <option value="cyclic">Cíclico (Ex: 1 trabalha / 1 folga)</option>
+            </select>
+          </div>
+
+          <!-- Semanal -->
+          <div id="scale-weekly-opts" class="scale-opts">
+            <label class="form-label">Dias da semana</label>
+            <div class="weekday-picker" role="group" aria-label="Selecionar dias da semana">
+              <button type="button" class="weekday-btn" data-day="0">D</button>
+              <button type="button" class="weekday-btn" data-day="1">S</button>
+              <button type="button" class="weekday-btn" data-day="2">T</button>
+              <button type="button" class="weekday-btn" data-day="3">Q</button>
+              <button type="button" class="weekday-btn" data-day="4">Q</button>
+              <button type="button" class="weekday-btn" data-day="5">S</button>
+              <button type="button" class="weekday-btn" data-day="6">S</button>
+            </div>
+          </div>
+
+          <!-- Cíclico -->
+          <div id="scale-cyclic-opts" class="scale-opts" hidden>
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label" for="cycle-work">Dias trabalhando</label>
+                <input id="cycle-work" class="form-input" type="number" min="1" max="30" value="1" />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="cycle-off">Dias de folga</label>
+                <input id="cycle-off" class="form-input" type="number" min="1" max="30" value="1" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="scale-start">Data de início</label>
+              <input id="scale-start" class="form-input" type="date" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="scale-end">Data fim (opc.)</label>
+              <input id="scale-end" class="form-input" type="date" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="scale-shift-start">Entrada</label>
+              <input id="scale-shift-start" class="form-input" type="time" value="07:00" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="scale-shift-end">Saída</label>
+              <input id="scale-shift-end" class="form-input" type="time" value="19:00" />
+            </div>
+          </div>
+        </div>
+        <footer class="modal__footer">
+          <button id="btn-delete-scale" class="btn btn--danger btn--sm" hidden>Excluir</button>
+          <button id="btn-save-scale" class="btn btn--primary">Salvar escala</button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- JS Modules (defer = non-blocking, preserves order) -->
+    <script src="js/utils.js" defer></script>
+    <script src="js/storage.js" defer></script>
+    <script src="js/calendar.js" defer></script>
+    <script src="js/main.js" defer></script>
+  </body>
+</html>

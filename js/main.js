@@ -500,6 +500,12 @@ function _bindEvents() {
   $('btn-sync')?.addEventListener('click', _handleSync);
   $('btn-test-connection')?.addEventListener('click', _handleTestConnection);
 
+   // ── Configuração Google Sheets ──
+   $('btn-save-sheets-config')
+     ?.addEventListener('click', () => {
+       SheetsConfig.save();
+   });
+   
   // ── Eventos customizados (disparados pelo Calendar) ──
   document.addEventListener('app:edit-event', e => {
     EventForm.open(null, e.detail);

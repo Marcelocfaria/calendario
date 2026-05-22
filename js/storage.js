@@ -279,7 +279,7 @@ const Storage = (() => {
 
       const res = await fetch(sheetsEndpoint, {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain' },  // ← única mudança
         body:    JSON.stringify(payload),
         signal:  controller.signal,
       });

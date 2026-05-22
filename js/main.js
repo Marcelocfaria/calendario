@@ -397,9 +397,18 @@ async function _handleSync() {
   const dot  = $('sync-status-dot');
   const text = $('sync-status-text');
 
+  // Se ainda não há endpoint configurado, abre direto as configurações
+  const { sheetsEndpoint } = Storage.getSettings();
+  if (!sheetsEndpoint || !sheetsEndpoint.trim()) {
+    Toast.show('Configure o endpoint do Google Sheets primeiro.', 'warning', 4000);
+    // Abre o modal de configurações se o módulo estiver disponível
+    if (typeof SheetsConfig !== 'undefined') SheetsConfig.open();
+    return;
+  }
+
   // Estado de carregamento
   btn?.classList.add('icon-btn--spinning');
-  if (dot)  dot.className   = 'sync-dot sync-dot--loading';
+  if (dot)  dot.className    = 'sync-dot sync-dot--loading';
   if (text) text.textContent = 'Sincronizando…';
 
   const result = await Storage.syncToSheets();
@@ -408,15 +417,15 @@ async function _handleSync() {
 
   if (result.ok) {
     Toast.show(result.message, 'success');
-    if (dot)  dot.className   = 'sync-dot sync-dot--ok';
+    if (dot)  dot.className = 'sync-dot sync-dot--ok';
     if (text) {
       const d   = new Date(result.syncedAt);
       const fmt = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       text.textContent = `Sincronizado às ${fmt}`;
     }
   } else {
-    Toast.show(result.message, 'error', 4000);
-    if (dot)  dot.className   = 'sync-dot sync-dot--error';
+    Toast.show(result.message, 'error', 4500);
+    if (dot)  dot.className    = 'sync-dot sync-dot--error';
     if (text) text.textContent = 'Falha na sincronização';
   }
 }

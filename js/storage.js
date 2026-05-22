@@ -261,14 +261,14 @@ const Storage = (() => {
    * @returns {Promise<{ ok: boolean, message: string, syncedAt?: string }>}
    */
   async function syncToSheets() {
-    const { sheetsEndpoint, sheetsEnabled } = getSettings();
+    const { sheetsEndpoint } = getSettings();
 
-    if (!sheetsEnabled) {
-      return { ok: false, message: 'Sincronização com Google Sheets está desabilitada.' };
-    }
-
-    if (!sheetsEndpoint) {
-      return { ok: false, message: 'Endpoint não configurado.' };
+    if (!sheetsEndpoint || !sheetsEndpoint.trim()) {
+      return {
+        ok: false,
+        message: 'Endpoint não configurado. Abra as Configurações e cole a URL do Apps Script.',
+        code: 'NO_ENDPOINT',
+      };
     }
 
     try {

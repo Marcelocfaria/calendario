@@ -562,6 +562,51 @@ function _registerServiceWorker() {
     .catch(err => console.warn('[PWA] Service Worker falhou:', err));
 }
 
+const SheetsConfig = (() => {
+
+  function open() {
+
+    const settings = Storage.getSettings();
+
+    $('sheets-endpoint').value =
+      settings.sheetsEndpoint || '';
+
+    Modals.open('modal-sheets-config');
+  }
+
+  function save() {
+
+    const url =
+      $('sheets-endpoint').value.trim();
+
+    if (!url) {
+      Toast.show(
+        'Cole a URL do Apps Script.',
+        'error'
+      );
+      return;
+    }
+
+    Storage.saveSettings({
+      sheetsEndpoint: url,
+      sheetsEnabled: true,
+    });
+
+    Toast.show(
+      'Configuração salva.',
+      'success'
+    );
+
+    Modals.close('modal-sheets-config');
+  }
+
+  return {
+    open,
+    save
+  };
+
+})();
+
 /* ─────────────────────────────────────────
    INICIALIZAÇÃO
 ───────────────────────────────────────── */

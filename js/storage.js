@@ -1,8 +1,7 @@
 /* ═══════════════════════════════════════════════════════════
    STORAGE.JS — Persistência e Sincronização
-   Responsabilidades:
    · CRUD de eventos e escalas no LocalStorage
-   · Configuração do endpoint Google Sheets
+   · Configurações (endpoint Google Sheets + valores financeiros)
    · Teste de conexão e sincronização manual via Fetch API
 ═══════════════════════════════════════════════════════════ */
 
@@ -10,9 +9,6 @@
 
 const Storage = (() => {
 
-  /* ─────────────────────────────────────────
-     CHAVES DO LOCALSTORAGE
-  ───────────────────────────────────────── */
   const KEYS = Object.freeze({
     EVENTS:      'escala_events',
     SCALES:      'escala_scales',
@@ -20,14 +16,6 @@ const Storage = (() => {
     LAST_SYNC:   'escala_last_sync',
   });
 
-  /* ─────────────────────────────────────────
-     HELPERS INTERNOS
-  ───────────────────────────────────────── */
-
-  /**
-   * Lê e faz parse seguro de uma chave do LS.
-   * Retorna fallback se ausente ou JSON inválido.
-   */
   function _read(key, fallback = null) {
     try {
       const raw = localStorage.getItem(key);
@@ -38,10 +26,6 @@ const Storage = (() => {
     }
   }
 
-  /**
-   * Serializa e grava um valor no LS.
-   * Retorna true em sucesso, false em falha (ex: quota excedida).
-   */
   function _write(key, value) {
     try {
       localStorage.setItem(key, JSON.stringify(value));
@@ -52,38 +36,21 @@ const Storage = (() => {
     }
   }
 
-  /* ─────────────────────────────────────────
-     EVENTOS — CRUD
-  ───────────────────────────────────────── */
+  /* ── EVENTOS ── */
 
-  /** Retorna todos os eventos manuais. */
   function getEvents() {
     return _read(KEYS.EVENTS, []);
   }
 
-  /**
-   * Retorna eventos de um dia específico.
-   * @param {string} dateISO — 'YYYY-MM-DD'
-   */
   function getEventsByDate(dateISO) {
     return getEvents().filter(e => e.date === dateISO);
   }
 
-  /**
-   * Retorna eventos de um mês inteiro.
-   * @param {number} year
-   * @param {number} month — 0-indexed
-   */
   function getEventsByMonth(year, month) {
     const prefix = `${year}-${String(month + 1).padStart(2, '0')}`;
     return getEvents().filter(e => e.date.startsWith(prefix));
   }
 
-  /**
-   * Salva um evento (cria ou atualiza por ID).
-   * @param {object} event
-   * @returns {object} evento salvo
-   */
   function saveEvent(event) {
     const events = getEvents();
     const idx = events.findIndex(e => e.id === event.id);
@@ -108,35 +75,21 @@ const Storage = (() => {
     return idx !== -1 ? events[idx] : events[events.length - 1];
   }
 
-  /**
-   * Remove um evento por ID.
-   * @param {string} id
-   * @returns {boolean}
-   */
   function deleteEvent(id) {
     const events = getEvents().filter(e => e.id !== id);
     return _write(KEYS.EVENTS, events);
   }
 
-  /* ─────────────────────────────────────────
-     ESCALAS — CRUD
-  ───────────────────────────────────────── */
+  /* ── ESCALAS ── */
 
-  /** Retorna todas as escalas. */
   function getScales() {
     return _read(KEYS.SCALES, []);
   }
 
-  /** Retorna uma escala por ID. */
   function getScaleById(id) {
     return getScales().find(s => s.id === id) ?? null;
   }
 
-  /**
-   * Salva uma escala (cria ou atualiza por ID).
-   * @param {object} scale
-   * @returns {object} escala salva
-   */
   function saveScale(scale) {
     const scales = getScales();
     const idx = scales.findIndex(s => s.id === scale.id);
@@ -147,10 +100,10 @@ const Storage = (() => {
       scales.push({
         id:         scale.id         ?? DateUtils.generateId(),
         name:       scale.name       ?? 'Nova Escala',
-        type:       scale.type       ?? 'weekly',    // weekly | biweekly | cyclic
-        activeDays: scale.activeDays ?? [],           // para weekly/biweekly
-        workDays:   scale.workDays   ?? 1,            // para cyclic
-        offDays:    scale.offDays    ?? 1,            // para cyclic
+        type:       scale.type       ?? 'weekly',
+        activeDays: scale.activeDays ?? [],
+        workDays:   scale.workDays   ?? 1,
+        offDays:    scale.offDays    ?? 1,
         startDate:  scale.startDate  ?? '',
         endDate:    scale.endDate    ?? null,
         shiftStart: scale.shiftStart ?? '07:00',
@@ -163,62 +116,44 @@ const Storage = (() => {
     return idx !== -1 ? scales[idx] : scales[scales.length - 1];
   }
 
-  /**
-   * Remove uma escala por ID.
-   * @param {string} id
-   * @returns {boolean}
-   */
   function deleteScale(id) {
     const scales = getScales().filter(s => s.id !== id);
     return _write(KEYS.SCALES, scales);
   }
 
-  /* ─────────────────────────────────────────
-     CONFIGURAÇÕES (endpoint Google Sheets)
-  ───────────────────────────────────────── */
+  /* ── CONFIGURAÇÕES ── */
 
   const DEFAULT_SETTINGS = {
     sheetsEndpoint: '',
     sheetsEnabled:  false,
     autoSync:       false,
+    // Financeiro
+    voluntaryRate:  550,    // R$ por serviço voluntário
+    baseAmount:     9350,   // R$ base mensal
+    payLagMonths:   2,      // meses até cair na conta
   };
 
-  /** Retorna as configurações atuais. */
   function getSettings() {
     return { ...DEFAULT_SETTINGS, ..._read(KEYS.SETTINGS, {}) };
   }
 
-  /**
-   * Salva configurações (merge parcial).
-   * @param {object} patch
-   */
   function saveSettings(patch) {
     const current = getSettings();
     return _write(KEYS.SETTINGS, { ...current, ...patch });
   }
 
-  /* ─────────────────────────────────────────
-     SINCRONIZAÇÃO — GOOGLE SHEETS
-  ───────────────────────────────────────── */
+  /* ── SINCRONIZAÇÃO — GOOGLE SHEETS ── */
 
-  /**
-   * Monta o payload completo para envio ao Apps Script.
-   * @returns {object}
-   */
   function _buildSyncPayload() {
     return {
-      version:   '1.0',
+      version:    '1.1',
       exportedAt: new Date().toISOString(),
-      events:    getEvents(),
-      scales:    getScales(),
+      events:     getEvents(),
+      scales:     getScales(),
+      finance:    (typeof Finance !== 'undefined') ? Finance.buildSyncRows(12, 3) : [],
     };
   }
 
-  /**
-   * Testa a conectividade com o endpoint do Apps Script.
-   * Envia um GET esperando { status: 'ok' }.
-   * @returns {Promise<{ ok: boolean, message: string }>}
-   */
   async function testConnection() {
     const { sheetsEndpoint } = getSettings();
 
@@ -256,10 +191,6 @@ const Storage = (() => {
     }
   }
 
-  /**
-   * Envia todos os dados locais via POST (JSON) para o Apps Script.
-   * @returns {Promise<{ ok: boolean, message: string, syncedAt?: string }>}
-   */
   async function syncToSheets() {
     const { sheetsEndpoint } = getSettings();
 
@@ -279,7 +210,7 @@ const Storage = (() => {
 
       const res = await fetch(sheetsEndpoint, {
         method:  'POST',
-        headers: { 'Content-Type': 'text/plain' },  // ← única mudança
+        headers: { 'Content-Type': 'text/plain' },
         body:    JSON.stringify(payload),
         signal:  controller.signal,
       });
@@ -290,9 +221,13 @@ const Storage = (() => {
       }
 
       const data = await res.json().catch(() => ({}));
-      const syncedAt = new Date().toISOString();
 
-      // Persiste timestamp da última sync bem-sucedida
+      // O Apps Script responde 200 mesmo em erro; confere o status do JSON
+      if (data?.status && data.status !== 'ok') {
+        return { ok: false, message: data.message ?? 'O servidor recusou os dados.' };
+      }
+
+      const syncedAt = new Date().toISOString();
       _write(KEYS.LAST_SYNC, syncedAt);
 
       return {
@@ -309,33 +244,16 @@ const Storage = (() => {
     }
   }
 
-  /**
-   * Retorna a data/hora da última sincronização bem-sucedida,
-   * ou null se nunca sincronizou.
-   * @returns {string|null} ISO string
-   */
   function getLastSyncDate() {
     return _read(KEYS.LAST_SYNC, null);
   }
 
-  /* ─────────────────────────────────────────
-     EXPORTAÇÃO / IMPORTAÇÃO LOCAL (backup)
-  ───────────────────────────────────────── */
+  /* ── BACKUP LOCAL ── */
 
-  /**
-   * Exporta todos os dados como JSON string (para download).
-   * @returns {string}
-   */
   function exportJSON() {
     return JSON.stringify(_buildSyncPayload(), null, 2);
   }
 
-  /**
-   * Importa dados de um JSON string (merge ou substituição).
-   * @param {string}  jsonString
-   * @param {boolean} replace — se true, substitui; se false, faz merge
-   * @returns {{ ok: boolean, message: string }}
-   */
   function importJSON(jsonString, replace = false) {
     try {
       const data = JSON.parse(jsonString);
@@ -348,7 +266,6 @@ const Storage = (() => {
         _write(KEYS.EVENTS, data.events);
         _write(KEYS.SCALES, data.scales);
       } else {
-        // Merge: adiciona somente IDs inexistentes
         const existingEventIds = new Set(getEvents().map(e => e.id));
         const existingScaleIds = new Set(getScales().map(s => s.id));
 
@@ -366,44 +283,16 @@ const Storage = (() => {
     }
   }
 
-  /**
-   * Apaga TODOS os dados (eventos, escalas, configurações).
-   * Use com cautela — irreversível sem backup.
-   */
   function clearAll() {
     Object.values(KEYS).forEach(key => localStorage.removeItem(key));
   }
 
-  /* ─────────────────────────────────────────
-     API PÚBLICA
-  ───────────────────────────────────────── */
   return Object.freeze({
-    // Eventos
-    getEvents,
-    getEventsByDate,
-    getEventsByMonth,
-    saveEvent,
-    deleteEvent,
-
-    // Escalas
-    getScales,
-    getScaleById,
-    saveScale,
-    deleteScale,
-
-    // Configurações
-    getSettings,
-    saveSettings,
-
-    // Sync
-    testConnection,
-    syncToSheets,
-    getLastSyncDate,
-
-    // Backup
-    exportJSON,
-    importJSON,
-    clearAll,
+    getEvents, getEventsByDate, getEventsByMonth, saveEvent, deleteEvent,
+    getScales, getScaleById, saveScale, deleteScale,
+    getSettings, saveSettings,
+    testConnection, syncToSheets, getLastSyncDate,
+    exportJSON, importJSON, clearAll,
   });
 
 })();

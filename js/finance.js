@@ -1,7 +1,10 @@
 /* ═══════════════════════════════════════════════════════════
-   FINANCE.JS — Aba Financeiro (serviços voluntários)
-   Total do mês = base + (serviços voluntários × valor por serviço)
-   O valor cai N meses depois do mês de referência.
+   FINANCE.JS — Aba Financeiro
+   Regra:
+   · Base (9.350) é fixa e cai TODO mês.
+   · Cada serviço voluntário feito no mês M rende +550 e só é
+     depositado em M + lag (padrão: 2 meses depois).
+   · Logo, o recebimento do mês X = base + (voluntários de X − lag) × valor.
    Dependências: DateUtils, Storage, Modals, Toast (globals)
 ═══════════════════════════════════════════════════════════ */
 
@@ -12,11 +15,14 @@ const Finance = (() => {
   const $ = id => document.getElementById(id);
   const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
   const MONTHS = DateUtils.MONTHS_LONG;
+  const MSHORT = DateUtils.MONTHS_SHORT;
 
   let _ref = DateUtils.startOfMonth(DateUtils.today());
 
   const _ym = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-  const _payLabel = d => `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  const _label = d => `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  const _short = d => `${MSHORT[d.getMonth()]}/${String(d.getFullYear()).slice(2)}`;
+  const _curMonth = () => { const n = DateUtils.today(); return new Date(n.getFullYear(), n.getMonth(), 1); };
   const _badge = ok => ok
     ? '<span class="fin-badge fin-badge--ok">Recebido</span>'
     : '<span class="fin-badge fin-badge--pending">A receber</span>';
@@ -32,40 +38,55 @@ const Finance = (() => {
     };
   }
 
-  /* ── Cálculo de um mês ── */
-  function calcMonth(year, month, cfg = getConfig()) {
+  /* ── Serviços voluntários FEITOS em um mês ── */
+  function worked(year, month) {
     const services = Storage.getEventsByMonth(year, month)
       .filter(e => e.type === 'voluntary')
       .sort((a, b) => a.date.localeCompare(b.date));
-
-    const count = services.length;
     const hours = services.reduce((acc, e) => acc + DateUtils.calcHours(e.startTime, e.endTime), 0);
-    const extra = count * cfg.rate;
-    const payDate = new Date(year, month + cfg.lag, 1);
-    const now = DateUtils.today();
-    const received = payDate <= new Date(now.getFullYear(), now.getMonth(), 1);
-
-    return { year, month, count, hours, extra, base: cfg.base, total: cfg.base + extra, payDate, received, services };
+    return { services, count: services.length, hours };
   }
 
-  /* ── Linhas para o Google Sheets (12 meses atrás até 3 à frente) ── */
+  /* ── Recebimento de um mês (mês do depósito) ──
+     base + voluntários feitos em (mês − lag) */
+  function calcMonth(year, month, cfg = getConfig()) {
+    const date    = new Date(year, month, 1);
+    const srcDate = new Date(year, month - cfg.lag, 1);   // mês em que os voluntários foram feitos
+    const done    = worked(year, month);
+    const paid    = worked(srcDate.getFullYear(), srcDate.getMonth());
+    const extra   = paid.count * cfg.rate;
+
+    return {
+      year, month, date,
+      // feito neste mês
+      workedCount: done.count, workedHours: done.hours, workedServices: done.services,
+      payDate: new Date(year, month + cfg.lag, 1),        // quando os voluntários DESTE mês caem
+      // recebido neste mês
+      srcDate, paidCount: paid.count, extra,
+      base: cfg.base, total: cfg.base + extra,
+      received: date <= _curMonth(),
+    };
+  }
+
+  /* ── Linhas para o Google Sheets ── */
   function buildSyncRows(monthsBack = 12, monthsAhead = 3) {
     const cfg = getConfig();
-    const now = DateUtils.today();
+    const now = _curMonth();
     const rows = [];
     for (let i = monthsBack; i >= -monthsAhead; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const r = calcMonth(d.getFullYear(), d.getMonth(), cfg);
       rows.push({
-        referencia:      _ym(d),
-        servicos:        r.count,
-        horas:           r.hours,
-        valorPorServico: cfg.rate,
-        valorVoluntario: r.extra,
-        valorBase:       r.base,
-        total:           r.total,
-        mesPagamento:    _ym(r.payDate),
-        status:          r.received ? 'Recebido' : 'A receber',
+        referencia:       _ym(d),                 // mês do recebimento
+        servicosFeitos:   r.workedCount,          // voluntários feitos neste mês
+        horas:            r.workedHours,
+        origemVoluntario: _ym(r.srcDate),         // mês em que foram feitos os voluntários pagos agora
+        servicosPagos:    r.paidCount,
+        valorPorServico:  cfg.rate,
+        valorVoluntario:  r.extra,
+        valorBase:        r.base,
+        total:            r.total,
+        status:           r.received ? 'Recebido' : 'A receber',
       });
     }
     return rows;
@@ -77,82 +98,101 @@ const Finance = (() => {
     const y = _ref.getFullYear();
     const m = _ref.getMonth();
     const cur = calcMonth(y, m, cfg);
+    const lagTxt = cfg.lag === 1 ? '1 mês' : `${cfg.lag} meses`;
 
     $('fin-month-name').textContent = MONTHS[m];
     $('fin-year-name').textContent  = y;
 
+    // Ano: recebimentos por mês de depósito
     const months = Array.from({ length: 12 }, (_, i) => calcMonth(y, i, cfg));
-    const yearServices = months.reduce((a, r) => a + r.count, 0);
-    const yearExtra    = months.reduce((a, r) => a + r.extra, 0);
-    const best = months.reduce((b, r) => r.count > b.count ? r : b, months[0]);
+    const yearWorked   = months.reduce((a, r) => a + r.workedCount, 0);
+    const yearEarned   = yearWorked * cfg.rate;                       // gerado pelos serviços feitos no ano
+    const yearReceived = months.filter(r => r.received).reduce((a, r) => a + r.total, 0);
+    const yearProjected = months.reduce((a, r) => a + r.total, 0);
+    const best = months.reduce((b, r) => r.workedCount > b.workedCount ? r : b, months[0]);
 
-    // Em trânsito: meses já trabalhados que ainda não caíram
-    const now = DateUtils.today();
+    // Em trânsito: feitos em [hoje − lag + 1 .. hoje], ainda não depositados
+    const now = _curMonth();
     const pending = [];
     for (let k = cfg.lag - 1; k >= 0; k--) {
       const d = new Date(now.getFullYear(), now.getMonth() - k, 1);
-      pending.push(calcMonth(d.getFullYear(), d.getMonth(), cfg));
+      const w = worked(d.getFullYear(), d.getMonth());
+      pending.push({ date: d, count: w.count, extra: w.count * cfg.rate,
+                     payDate: new Date(d.getFullYear(), d.getMonth() + cfg.lag, 1) });
     }
-    const pendingTotal = pending.reduce((a, r) => a + r.total, 0);
-    const next = pending[0];
+    const pendingTotal = pending.reduce((a, p) => a + p.extra, 0);
 
-    // Histórico: 6 meses até o mês de referência
+    // Histórico: 6 recebimentos até o mês selecionado
     const history = [];
     for (let i = 5; i >= 0; i--) {
       const d = new Date(y, m - i, 1);
       history.push(calcMonth(d.getFullYear(), d.getMonth(), cfg));
     }
-    const maxCount = Math.max(1, ...history.map(r => r.count));
+    const maxExtra = Math.max(1, ...history.map(r => r.extra));
 
-    const days = cur.services
+    const days = cur.workedServices
       .map(e => `<span class="fin-chip">${DateUtils.fromISOString(e.date).getDate()}</span>`).join('');
+    const srcName = MONTHS[cur.srcDate.getMonth()].toLowerCase();
 
     $('finance-content').innerHTML = `
       <div class="fin-hero">
-        <span class="fin-hero__label">Total de ${MONTHS[m].toLowerCase()} ${_badge(cur.received)}</span>
+        <span class="fin-hero__label">Recebimento de ${MONTHS[m].toLowerCase()} ${_badge(cur.received)}</span>
         <span class="fin-hero__value">${BRL.format(cur.total)}</span>
-        <span class="fin-hero__sub">Cai em <strong>${_payLabel(cur.payDate)}</strong></span>
+        <span class="fin-hero__sub">
+          ${cur.paidCount
+            ? `Inclui ${cur.paidCount} voluntário(s) de <strong>${srcName}</strong>`
+            : `Sem voluntários de <strong>${srcName}</strong> neste depósito`}
+        </span>
       </div>
 
       <div class="stats-grid">
-        <div class="stat-card"><span class="stat-card__label">Serviços voluntários</span><span class="stat-card__value">${cur.count}</span></div>
-        <div class="stat-card"><span class="stat-card__label">Horas</span><span class="stat-card__value">${cur.hours ? DateUtils.formatHours(cur.hours) : '0h'}</span></div>
+        <div class="stat-card"><span class="stat-card__label">Voluntários feitos em ${MSHORT[m].toLowerCase()}</span><span class="stat-card__value">${cur.workedCount}</span></div>
+        <div class="stat-card"><span class="stat-card__label">Horas</span><span class="stat-card__value">${cur.workedHours ? DateUtils.formatHours(cur.workedHours) : '0h'}</span></div>
       </div>
 
       <div class="fin-card">
-        <h3 class="fin-card__title">Composição</h3>
+        <h3 class="fin-card__title">Composição do recebimento</h3>
         <div class="fin-line"><span>Base fixa</span><span>${BRL.format(cur.base)}</span></div>
-        <div class="fin-line"><span>${cur.count} × ${BRL.format(cfg.rate)} (voluntários)</span><span>${BRL.format(cur.extra)}</span></div>
+        <div class="fin-line"><span>${cur.paidCount} × ${BRL.format(cfg.rate)} (voluntários de ${srcName})</span><span>${BRL.format(cur.extra)}</span></div>
         <div class="fin-line fin-line--total"><span>Total</span><span>${BRL.format(cur.total)}</span></div>
+      </div>
+
+      <div class="fin-card">
+        <h3 class="fin-card__title">Voluntários feitos em ${MONTHS[m].toLowerCase()}</h3>
+        <div class="fin-line"><span>${cur.workedCount} × ${BRL.format(cfg.rate)}</span><span>${BRL.format(cur.workedCount * cfg.rate)}</span></div>
+        <div class="fin-line"><span>Cai em</span><span>${_label(cur.payDate)}</span></div>
         ${days ? `<div class="fin-days"><span>Dias:</span>${days}</div>` : '<p class="fin-muted">Nenhum serviço voluntário neste mês.</p>'}
       </div>
 
       <div class="fin-card">
         <h3 class="fin-card__title">Em trânsito</h3>
-        <div class="fin-line"><span>A receber (já trabalhado)</span><span>${BRL.format(pendingTotal)}</span></div>
-        ${next ? `<div class="fin-line"><span>Próximo recebimento</span><span>${_payLabel(next.payDate)} · ${BRL.format(next.total)}</span></div>` : ''}
+        <div class="fin-line"><span>Voluntários já feitos, ainda não pagos</span><span>${BRL.format(pendingTotal)}</span></div>
+        ${pending.map(p => `
+          <div class="fin-line"><span>${MONTHS[p.date.getMonth()]}: ${p.count} serviço(s)</span><span>${BRL.format(p.extra)} · cai em ${_short(p.payDate)}</span></div>`).join('')}
       </div>
 
       <div class="fin-card">
         <h3 class="fin-card__title">Ano de ${y}</h3>
-        <div class="fin-line"><span>Serviços voluntários</span><span>${yearServices}</span></div>
-        <div class="fin-line"><span>Ganho com voluntários</span><span>${BRL.format(yearExtra)}</span></div>
-        <div class="fin-line"><span>Média por mês</span><span>${(yearServices / 12).toFixed(1).replace('.', ',')} serviços</span></div>
-        <div class="fin-line"><span>Mês com mais serviços</span><span>${best.count ? `${MONTHS[best.month]} (${best.count})` : '—'}</span></div>
+        <div class="fin-line"><span>Voluntários feitos</span><span>${yearWorked}</span></div>
+        <div class="fin-line"><span>Gerado por voluntários</span><span>${BRL.format(yearEarned)}</span></div>
+        <div class="fin-line"><span>Média por mês</span><span>${(yearWorked / 12).toFixed(1).replace('.', ',')} serviços</span></div>
+        <div class="fin-line"><span>Mês com mais serviços</span><span>${best.workedCount ? `${MONTHS[best.month]} (${best.workedCount})` : '—'}</span></div>
+        <div class="fin-line"><span>Já recebido no ano</span><span>${BRL.format(yearReceived)}</span></div>
+        <div class="fin-line"><span>Previsto no ano (12 meses)</span><span>${BRL.format(yearProjected)}</span></div>
       </div>
 
       <div class="fin-card">
-        <h3 class="fin-card__title">Últimos 6 meses</h3>
+        <h3 class="fin-card__title">Últimos 6 recebimentos</h3>
         ${history.reverse().map(r => `
           <div class="fin-hist">
             <div class="fin-hist__top">
-              <span class="fin-hist__month">${DateUtils.MONTHS_SHORT[r.month]}/${String(r.year).slice(2)}</span>
+              <span class="fin-hist__month">${_short(r.date)}</span>
               <span class="fin-hist__total">${BRL.format(r.total)}</span>
             </div>
-            <div class="fin-hist__bar"><span style="width:${(r.count / maxCount) * 100}%"></span></div>
+            <div class="fin-hist__bar"><span style="width:${(r.extra / maxExtra) * 100}%"></span></div>
             <div class="fin-hist__meta">
-              <span>${r.count} serviço(s) · ${BRL.format(r.extra)}</span>
-              <span>cai em ${DateUtils.MONTHS_SHORT[r.payDate.getMonth()]}/${String(r.payDate.getFullYear()).slice(2)} ${_badge(r.received)}</span>
+              <span>${r.paidCount} voluntário(s) de ${_short(r.srcDate)} · ${BRL.format(r.extra)}</span>
+              ${_badge(r.received)}
             </div>
           </div>`).join('')}
       </div>

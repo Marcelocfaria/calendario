@@ -27,12 +27,10 @@
     <link rel="stylesheet" href="styles/variables.css" />
     <link rel="stylesheet" href="styles/main.css" />
     <link rel="stylesheet" href="styles/components.css" />
+    <link rel="stylesheet" href="styles/finance.css" />
   </head>
 
   <body>
-    <!-- ════════════════════════════════════════
-         APP SHELL
-    ════════════════════════════════════════ -->
     <div id="app" class="app" role="application" aria-label="Agenda de Escalas">
 
       <!-- ── TOP BAR ── -->
@@ -43,24 +41,14 @@
             <h1 class="topbar__title">Escalas</h1>
           </div>
           <div class="topbar__actions">
-            <button
-              id="btn-sync"
-              class="icon-btn"
-              aria-label="Sincronizar com Google Sheets"
-              title="Sincronizar"
-            >
+            <button id="btn-sync" class="icon-btn" aria-label="Sincronizar com Google Sheets" title="Sincronizar">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="23 4 23 10 17 10"/>
                 <polyline points="1 20 1 14 7 14"/>
                 <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
               </svg>
             </button>
-            <button
-              id="btn-add"
-              class="icon-btn icon-btn--primary"
-              aria-label="Adicionar novo evento"
-              title="Novo evento"
-            >
+            <button id="btn-add" class="icon-btn icon-btn--primary" aria-label="Adicionar novo evento" title="Novo evento">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
                 <line x1="12" y1="5" x2="12" y2="19"/>
                 <line x1="5" y1="12" x2="19" y2="12"/>
@@ -72,14 +60,8 @@
 
       <!-- ── NAVIGATION TABS ── -->
       <nav class="tab-nav" role="tablist" aria-label="Seções do aplicativo">
-        <button
-          class="tab-nav__item tab-nav__item--active"
-          role="tab"
-          aria-selected="true"
-          aria-controls="panel-calendar"
-          id="tab-calendar"
-          data-tab="calendar"
-        >
+        <button class="tab-nav__item tab-nav__item--active" role="tab" aria-selected="true"
+          aria-controls="panel-calendar" id="tab-calendar" data-tab="calendar">
           <svg class="tab-nav__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <rect x="3" y="4" width="18" height="18" rx="2"/>
             <line x1="16" y1="2" x2="16" y2="6"/>
@@ -89,14 +71,8 @@
           <span>Calendário</span>
         </button>
 
-        <button
-          class="tab-nav__item"
-          role="tab"
-          aria-selected="false"
-          aria-controls="panel-scales"
-          id="tab-scales"
-          data-tab="scales"
-        >
+        <button class="tab-nav__item" role="tab" aria-selected="false"
+          aria-controls="panel-scales" id="tab-scales" data-tab="scales">
           <svg class="tab-nav__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="10"/>
             <polyline points="12 6 12 12 16 14"/>
@@ -104,14 +80,8 @@
           <span>Escalas</span>
         </button>
 
-        <button
-          class="tab-nav__item"
-          role="tab"
-          aria-selected="false"
-          aria-controls="panel-summary"
-          id="tab-summary"
-          data-tab="summary"
-        >
+        <button class="tab-nav__item" role="tab" aria-selected="false"
+          aria-controls="panel-summary" id="tab-summary" data-tab="summary">
           <svg class="tab-nav__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <line x1="18" y1="20" x2="18" y2="10"/>
             <line x1="12" y1="20" x2="12" y2="4"/>
@@ -119,19 +89,22 @@
           </svg>
           <span>Resumo</span>
         </button>
+
+        <button class="tab-nav__item" role="tab" aria-selected="false"
+          aria-controls="panel-finance" id="tab-finance" data-tab="finance">
+          <svg class="tab-nav__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          <span>Financeiro</span>
+        </button>
       </nav>
 
       <!-- ── MAIN CONTENT ── -->
       <main class="content" role="main">
 
         <!-- ─── PANEL: CALENDÁRIO ─── -->
-        <section
-          id="panel-calendar"
-          class="panel panel--active"
-          role="tabpanel"
-          aria-labelledby="tab-calendar"
-        >
-          <!-- Month navigator -->
+        <section id="panel-calendar" class="panel panel--active" role="tabpanel" aria-labelledby="tab-calendar">
           <div class="month-nav" aria-live="polite" aria-atomic="true">
             <button id="btn-prev-month" class="month-nav__arrow" aria-label="Mês anterior">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -149,64 +122,37 @@
             </button>
           </div>
 
-          <!-- Calendar grid -->
           <div class="calendar" role="grid" aria-label="Calendário">
-            <!-- Day-of-week headers -->
             <div class="calendar__weekdays" role="row" aria-hidden="true">
-              <span>Dom</span>
-              <span>Seg</span>
-              <span>Ter</span>
-              <span>Qua</span>
-              <span>Qui</span>
-              <span>Sex</span>
-              <span>Sáb</span>
+              <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
             </div>
-            <!-- Day cells — rendered by calendar.js -->
             <div id="calendar-grid" class="calendar__grid" role="rowgroup"></div>
           </div>
 
-          <!-- Selected-day event list -->
           <div id="day-events" class="day-events" aria-live="polite">
             <p class="day-events__empty">Selecione um dia para ver os eventos.</p>
           </div>
         </section>
 
         <!-- ─── PANEL: ESCALAS ─── -->
-        <section
-          id="panel-scales"
-          class="panel"
-          role="tabpanel"
-          aria-labelledby="tab-scales"
-          hidden
-        >
+        <section id="panel-scales" class="panel" role="tabpanel" aria-labelledby="tab-scales" hidden>
           <div class="section-header">
             <h2 class="section-header__title">Escalas de Serviço</h2>
-            <button id="btn-add-scale" class="btn btn--ghost btn--sm">
-              + Nova escala
-            </button>
+            <button id="btn-add-scale" class="btn btn--ghost btn--sm">+ Nova escala</button>
           </div>
-
           <div id="scales-list" class="scales-list">
-            <!-- Rendered by calendar.js -->
             <p class="empty-state">Nenhuma escala cadastrada.</p>
           </div>
         </section>
 
         <!-- ─── PANEL: RESUMO ─── -->
-        <section
-          id="panel-summary"
-          class="panel"
-          role="tabpanel"
-          aria-labelledby="tab-summary"
-          hidden
-        >
+        <section id="panel-summary" class="panel" role="tabpanel" aria-labelledby="tab-summary" hidden>
           <div class="section-header">
             <h2 class="section-header__title">
               Resumo <em id="summary-month-label"></em>
             </h2>
           </div>
 
-          <!-- Stats grid -->
           <div class="stats-grid" role="list" aria-label="Estatísticas do mês">
             <div class="stat-card" role="listitem">
               <span class="stat-card__label">Plantões</span>
@@ -226,43 +172,53 @@
             </div>
           </div>
 
-          <!-- Monthly event list -->
           <div class="section-header section-header--sub">
             <h3 class="section-header__title section-header__title--sm">Todos os eventos do mês</h3>
           </div>
-          <div id="monthly-events-list" class="monthly-list">
-            <!-- Rendered by main.js -->
-          </div>
+          <div id="monthly-events-list" class="monthly-list"></div>
 
-          <!-- Sync status -->
           <div class="sync-section">
             <div class="sync-section__status">
               <span id="sync-status-dot" class="sync-dot sync-dot--idle" aria-hidden="true"></span>
               <span id="sync-status-text" class="sync-section__text">Não sincronizado</span>
             </div>
-            <button id="btn-test-connection" class="btn btn--outline btn--sm">
-              Testar conexão
-            </button>
+            <div style="display:flex; gap:8px;">
+              <button id="btn-sheets-config" class="btn btn--ghost btn--sm">Configurar</button>
+              <button id="btn-test-connection" class="btn btn--outline btn--sm">Testar conexão</button>
+            </div>
           </div>
         </section>
 
-      </main>
+        <!-- ─── PANEL: FINANCEIRO ─── -->
+        <section id="panel-finance" class="panel" role="tabpanel" aria-labelledby="tab-finance" hidden>
+          <div class="section-header">
+            <h2 class="section-header__title">Financeiro</h2>
+            <button id="btn-finance-config" class="btn btn--ghost btn--sm">Ajustar valores</button>
+          </div>
 
+          <div class="month-nav">
+            <button id="fin-prev" class="month-nav__arrow" aria-label="Mês anterior">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div class="month-nav__label">
+              <span id="fin-month-name" class="month-nav__month"></span>
+              <span id="fin-year-name" class="month-nav__year"></span>
+            </div>
+            <button id="fin-next" class="month-nav__arrow" aria-label="Próximo mês">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+
+          <div id="finance-content"></div>
+        </section>
+
+      </main>
     </div><!-- /#app -->
 
-    <!-- ════════════════════════════════════════
-         MODALS (Bottom Sheets)
-    ════════════════════════════════════════ -->
+    <!-- ════════════════ MODALS ════════════════ -->
 
-    <!-- Modal: Adicionar / Editar Evento -->
-    <div
-      id="modal-event"
-      class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-event-title"
-      aria-hidden="true"
-    >
+    <!-- Modal: Evento -->
+    <div id="modal-event" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-event-title" aria-hidden="true">
       <div class="modal__backdrop" data-close-modal></div>
       <div class="modal__sheet">
         <div class="modal__handle" aria-hidden="true"></div>
@@ -289,6 +245,7 @@
               <label class="form-label" for="event-type">Tipo</label>
               <select id="event-type" class="form-input form-select">
                 <option value="shift">Plantão</option>
+                <option value="voluntary">Serviço voluntário</option>
                 <option value="meeting">Reunião</option>
                 <option value="off">Folga</option>
                 <option value="other">Outro</option>
@@ -317,15 +274,8 @@
       </div>
     </div>
 
-    <!-- Modal: Adicionar / Editar Escala -->
-    <div
-      id="modal-scale"
-      class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-scale-title"
-      aria-hidden="true"
-    >
+    <!-- Modal: Escala -->
+    <div id="modal-scale" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-scale-title" aria-hidden="true">
       <div class="modal__backdrop" data-close-modal></div>
       <div class="modal__sheet">
         <div class="modal__handle" aria-hidden="true"></div>
@@ -352,7 +302,6 @@
             </select>
           </div>
 
-          <!-- Semanal -->
           <div id="scale-weekly-opts" class="scale-opts">
             <label class="form-label">Dias da semana</label>
             <div class="weekday-picker" role="group" aria-label="Selecionar dias da semana">
@@ -366,7 +315,6 @@
             </div>
           </div>
 
-          <!-- Cíclico -->
           <div id="scale-cyclic-opts" class="scale-opts" hidden>
             <div class="form-row">
               <div class="form-field">
@@ -408,63 +356,64 @@
       </div>
     </div>
 
-    <!-- Modal: Configuração Google Sheets -->
-<div
-  id="modal-sheets-config"
-  class="modal"
-  role="dialog"
-  aria-modal="true"
-  aria-hidden="true"
->
-  <div class="modal__backdrop" data-close-modal></div>
-
-  <div class="modal__sheet">
-    <div class="modal__handle"></div>
-
-    <header class="modal__header">
-      <h2 class="modal__title">Google Sheets</h2>
-
-      <button class="modal__close" data-close-modal>
-        ✕
-      </button>
-    </header>
-
-    <div class="modal__body">
-
-      <div class="form-field">
-        <label class="form-label">
-          URL do Apps Script
-        </label>
-
-        <input
-          id="sheets-endpoint"
-          class="form-input"
-          type="url"
-          placeholder="https://script.google.com/macros/s/..."
-        />
+    <!-- Modal: Google Sheets -->
+    <div id="modal-sheets-config" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sheets-title" aria-hidden="true">
+      <div class="modal__backdrop" data-close-modal></div>
+      <div class="modal__sheet">
+        <div class="modal__handle" aria-hidden="true"></div>
+        <header class="modal__header">
+          <h2 id="modal-sheets-title" class="modal__title">Google Sheets</h2>
+          <button class="modal__close" data-close-modal aria-label="Fechar">✕</button>
+        </header>
+        <div class="modal__body">
+          <div class="form-field">
+            <label class="form-label" for="sheets-endpoint">URL do Apps Script</label>
+            <input id="sheets-endpoint" class="form-input" type="url" placeholder="https://script.google.com/macros/s/..." />
+          </div>
+        </div>
+        <footer class="modal__footer">
+          <button id="btn-save-sheets-config" class="btn btn--primary">Salvar</button>
+        </footer>
       </div>
-
     </div>
 
-    <footer class="modal__footer">
-      <button
-        id="btn-save-sheets-config"
-        class="btn btn--primary"
-      >
-        Salvar
-      </button>
-    </footer>
+    <!-- Modal: Valores do Financeiro -->
+    <div id="modal-finance-config" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-finance-title" aria-hidden="true">
+      <div class="modal__backdrop" data-close-modal></div>
+      <div class="modal__sheet">
+        <div class="modal__handle" aria-hidden="true"></div>
+        <header class="modal__header">
+          <h2 id="modal-finance-title" class="modal__title">Valores</h2>
+          <button class="modal__close" data-close-modal aria-label="Fechar">✕</button>
+        </header>
+        <div class="modal__body">
+          <div class="form-field">
+            <label class="form-label" for="fin-rate">Valor por serviço voluntário (R$)</label>
+            <input id="fin-rate" class="form-input" type="number" step="0.01" min="0" inputmode="decimal" />
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="fin-base">Valor base mensal (R$)</label>
+            <input id="fin-base" class="form-input" type="number" step="0.01" min="0" inputmode="decimal" />
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="fin-lag">Meses até cair na conta</label>
+            <input id="fin-lag" class="form-input" type="number" min="0" max="12" />
+          </div>
+        </div>
+        <footer class="modal__footer">
+          <button id="btn-save-finance-config" class="btn btn--primary">Salvar</button>
+        </footer>
+      </div>
+    </div>
 
-  </div>
-</div>
-    
-    <!-- Toast notification -->
+    <!-- Toast -->
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
-    <!-- JS Modules (defer = non-blocking, preserves order) -->
+    <!-- JS (ordem importa: finance antes de main) -->
     <script src="js/utils.js" defer></script>
     <script src="js/storage.js" defer></script>
     <script src="js/calendar.js" defer></script>
+    <script src="js/finance.js" defer></script>
     <script src="js/main.js" defer></script>
   </body>
 </html>

@@ -1,0 +1,70 @@
+/* ═══════════════════════════════════════════════════════════
+   FINANCE.CSS — Aba Financeiro + cor do tipo "voluntário"
+═══════════════════════════════════════════════════════════ */
+
+.calendar__dot--voluntary,
+.event-item__stripe--voluntary { background-color: var(--color-voluntary); }
+
+.fin-hero {
+  margin: 0 var(--space-5) var(--space-4);
+  padding: var(--space-6) var(--space-5);
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  display: flex; flex-direction: column; gap: var(--space-2);
+}
+.fin-hero__label {
+  display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap;
+  font-size: var(--text-xs); font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-widest); text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+.fin-hero__value {
+  font-family: var(--font-display); font-size: var(--text-3xl);
+  letter-spacing: var(--tracking-tight); color: var(--color-accent);
+  line-height: var(--leading-tight); font-variant-numeric: tabular-nums;
+}
+.fin-hero__sub { font-size: var(--text-sm); color: var(--color-text-secondary); }
+
+.fin-card {
+  margin: var(--space-3) var(--space-5) 0;
+  padding: var(--space-4);
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+.fin-card__title {
+  font-size: var(--text-xs); font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-widest); text-transform: uppercase;
+  color: var(--color-text-tertiary); margin-bottom: var(--space-3);
+}
+.fin-line {
+  display: flex; justify-content: space-between; gap: var(--space-3);
+  padding: var(--space-2) 0; font-size: var(--text-sm);
+  color: var(--color-text-secondary); font-variant-numeric: tabular-nums;
+}
+.fin-line span:last-child { color: var(--color-text-primary); font-weight: var(--weight-medium); text-align: right; }
+.fin-line--total { border-top: 1px solid var(--color-border); margin-top: var(--space-2); padding-top: var(--space-3); }
+.fin-line--total span { color: var(--color-text-primary) !important; font-weight: var(--weight-bold) !important; }
+.fin-muted { font-size: var(--text-sm); color: var(--color-text-tertiary); font-style: italic; margin-top: var(--space-2); }
+
+.fin-days { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-3); font-size: var(--text-xs); color: var(--color-text-tertiary); }
+.fin-chip {
+  min-width: 28px; padding: 3px var(--space-2); text-align: center;
+  border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: var(--weight-semibold);
+  background-color: var(--color-bg-sunken); color: var(--color-voluntary);
+}
+
+.fin-badge { padding: 2px var(--space-2); border-radius: var(--radius-full); font-size: var(--text-xs); letter-spacing: var(--tracking-wide); text-transform: none; font-weight: var(--weight-semibold); white-space: nowrap; }
+.fin-badge--ok      { background-color: var(--color-success-muted); color: var(--color-success); }
+.fin-badge--pending { background-color: var(--color-accent-muted);  color: var(--color-accent); }
+
+.fin-hist { padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border); }
+.fin-hist:last-child { border-bottom: none; padding-bottom: 0; }
+.fin-hist__top { display: flex; justify-content: space-between; align-items: baseline; }
+.fin-hist__month { font-family: var(--font-display); font-size: var(--text-lg); }
+.fin-hist__total { font-size: var(--text-sm); font-weight: var(--weight-semibold); font-variant-numeric: tabular-nums; }
+.fin-hist__bar { height: 4px; margin: var(--space-2) 0; border-radius: var(--radius-full); background-color: var(--color-bg-sunken); overflow: hidden; }
+.fin-hist__bar span { display: block; height: 100%; border-radius: inherit; background-color: var(--color-voluntary); transition: width var(--duration-slow) var(--ease-out-expo); }
+.fin-hist__meta { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); font-size: var(--text-xs); color: var(--color-text-tertiary); }
+#finance-content { padding-bottom: var(--space-4); }
